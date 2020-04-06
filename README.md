@@ -1,6 +1,8 @@
 # BSMulti-Installer
 Install Beat Saber Multiplayer Easily
 
+![alt text](https://tigersserver.xyz/wp-content/uploads/2020/04/bsmi.png)
+
 **ATTENTION**
 If you need to re-install, or remove Multiplayer, you will have to remove it manually. Currently, this software only installs Beat Saber Multiplayer!
 
