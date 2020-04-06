@@ -19,3 +19,13 @@ All you do is download the latest release, unzip, run the executable, allow it p
 
 ## I need help with installing it
 There's help and info inside of the executable, just look for the blue text and click that.
+
+## Somethings wrong/doesn't do what it's supposed to do/broken lol
+Submit an issue at https://github.com/200Tigersbloxed/BSMulti-Installer/issues
+"how do i do that"
+login to your github account, press big green button in top right that says "New Issue", and describe the issue the best you can.
+"what if i don't want to create account"
+if you don't login, you can't submit an issue, if you can't submit an issue, i can't fix it, if i don't fix it then you unhappy
+tl;dr do it anyways
+"but github virus!!!!! :O:O:O:O"
+no
