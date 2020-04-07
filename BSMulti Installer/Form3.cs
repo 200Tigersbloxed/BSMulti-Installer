@@ -45,6 +45,9 @@ namespace BSMulti_Installer
             {
                 dir.Delete(true);
             }
+            Directory.CreateDirectory(@"ZingaboppFiles\multiplayer");
+            Directory.CreateDirectory(@"ZingaboppFiles\ca");
+            Directory.CreateDirectory(@"ZingaboppFiles\dovr");
             label3.Text = "Status: Downloading File 2/5";
             progressBar1.Value = 40;
             using (var wc = new WebClient())
@@ -62,17 +65,61 @@ namespace BSMulti_Installer
 
         void wc_DownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completedcadll);
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/customavatars"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca.zip");
+            }
+        }
+
+        void wc_Completedcadll(object sender, AsyncCompletedEventArgs e)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completeddovr);
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/cadll"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\CustomAvatar.dll");
+            }
+        }
+
+        void wc_Completeddovr(object sender, AsyncCompletedEventArgs e)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completedca);
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/dynamicopenvr"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr.zip");
+            }
+        }
+
+        void wc_Completedca(object sender, AsyncCompletedEventArgs e)
+        {
             label3.Text = "Status: Un-packing ZIP file 3/5";
             progressBar1.Value = 60;
-            ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer.zip", "ZingaboppFiles");
+            ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer.zip", @"ZingaboppFiles\multiplayer");
+            ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca.zip", @"ZingaboppFiles\ca");
+            ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr.zip", @"ZingaboppFiles\dovr");
             label3.Text = "Status: Moving Lib Files 4/5";
             progressBar1.Value = 80;
-            System.IO.DirectoryInfo diLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\Libs");
+            System.IO.DirectoryInfo diLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Libs");
             foreach (FileInfo file in diLibs.GetFiles())
             {
                 if (File.Exists(bsdir + @"\Libs\" + file.Name))
                 {
-                    
+
+                }
+                else
+                {
+                    file.MoveTo(bsdir + @"\Libs\" + file.Name);
+                }
+            }
+            System.IO.DirectoryInfo didovrLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr\Libs");
+            foreach (FileInfo file in didovrLibs.GetFiles())
+            {
+                if (File.Exists(bsdir + @"\Libs\" + file.Name))
+                {
+
                 }
                 else
                 {
@@ -80,7 +127,7 @@ namespace BSMulti_Installer
                 }
             }
             label3.Text = "Status: Moving Plugin Files 5/5";
-            System.IO.DirectoryInfo diPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\Plugins");
+            System.IO.DirectoryInfo diPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Plugins");
             foreach (FileInfo file in diPlugins.GetFiles())
             {
                 if (File.Exists(bsdir + @"\Plugins\" + file.Name))
@@ -91,6 +138,50 @@ namespace BSMulti_Installer
                 {
                     file.MoveTo(bsdir + @"\Plugins\" + file.Name);
                 }
+            }
+            System.IO.DirectoryInfo didovrPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr\Plugins");
+            foreach (FileInfo file in diPlugins.GetFiles())
+            {
+                if (File.Exists(bsdir + @"\Plugins\" + file.Name))
+                {
+
+                }
+                else
+                {
+                    file.MoveTo(bsdir + @"\Plugins\" + file.Name);
+                }
+            }
+            if(File.Exists(bsdir + @"\Plugins\CustomAvatar.dll"))
+            {
+                File.Delete(bsdir + @"\Plugins\CustomAvatar.dll");
+                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\CustomAvatar.dll", bsdir + @"\Plugins\CustomAvatar.dll");
+            }
+            else
+            {
+                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\CustomAvatar.dll", bsdir + @"\Plugins\CustomAvatar.dll");
+            }
+            if (Directory.Exists(bsdir + @"\DynamicOpenVR"))
+            {
+
+            }
+            else
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca\DynamicOpenVR", bsdir + @"\DynamicOpenVR");
+            }
+            if (Directory.Exists(bsdir + @"\CustomAvatars"))
+            {
+                if (Directory.Exists(bsdir + @"\CustomAvatars\Shaders"))
+                {
+
+                }
+                else
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca\CustomAvatars\Shaders", bsdir + @"\CustomAvatars\Shaders");
+                }
+            }
+            else
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca\CustomAvatars", bsdir + @"\CustomAvatars");
             }
             label3.Text = "Status: Done!";
             progressBar1.Value = 100;
@@ -106,6 +197,7 @@ namespace BSMulti_Installer
                 if(File.Exists(selectedPath + @"\Beat Saber.exe"))
                 {
                     button1.Visible = true;
+                    button3.Visible = true;
                     bsdir = selectedPath;
                 }
                 else
@@ -119,6 +211,20 @@ namespace BSMulti_Installer
         {
             Form4 f4 = new Form4();
             f4.Show();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form6 f6 = new Form6();
+            f6.bsdir = bsdir;
+            f6.FormClosed += new FormClosedEventHandler(Form6Closed);
+            f6.Show();
+            this.Hide();
+        }
+
+        void Form6Closed(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
         }
     }
 }

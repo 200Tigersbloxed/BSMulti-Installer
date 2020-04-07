@@ -42,6 +42,7 @@ namespace BSMulti_Installer
                 if (File.Exists(selectedPath + @"\Beat Saber.exe"))
                 {
                     button1.Visible = true;
+                    button3.Visible = true;
                     bsdir = selectedPath;
                 }
                 else
@@ -229,12 +230,12 @@ namespace BSMulti_Installer
                     }
                     else
                     {
-                        Directory.Move(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\ca\CustomAvatars\Shaders", bsdir + @"\CustomAvatars\Shaders");
+                        Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\ca\CustomAvatars\Shaders", bsdir + @"\CustomAvatars\Shaders");
                     }
                 }
                 else
                 {
-                    Directory.Move(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\ca\CustomAvatars", bsdir + @"\CustomAvatars");
+                    Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\ca\CustomAvatars", bsdir + @"\CustomAvatars");
                 }
                 label3.Text = "Status: Installing DynamicOpenVR 7/7";
                 progressBar1.Value = 84;
@@ -264,6 +265,20 @@ namespace BSMulti_Installer
                 }
                 dovr = true;
             } 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form7 f7 = new Form7();
+            f7.bsdir = bsdir;
+            f7.FormClosed += new FormClosedEventHandler(Form7Closed);
+            f7.Show();
+            this.Hide();
+        }
+
+        void Form7Closed(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
         }
     }
 }
