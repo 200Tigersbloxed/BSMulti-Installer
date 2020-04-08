@@ -58,7 +58,7 @@ namespace BSMulti_Installer
 
                     if (Directory.Exists(bsdir + @"\DynamicOpenVR"))
                     {
-                        Directory.Delete(bsdir + @"\DynamicOpenVR");
+                        Directory.Delete(bsdir + @"\DynamicOpenVR", true);
                     }
                 }
                 if(checkBox4.Checked == true)
