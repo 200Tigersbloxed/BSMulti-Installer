@@ -3,6 +3,9 @@ Install and Uninstall Beat Saber Multiplayer Easily
 
 ![alt text](https://tigersserver.xyz/wp-content/uploads/2020/04/bsmi.png)
 
+## ATTENTION
+To update or switch versions, you will need to uninstall first, then install, otherwise it won't work.
+
 okay now time for actual information
 
 ## What is this?
