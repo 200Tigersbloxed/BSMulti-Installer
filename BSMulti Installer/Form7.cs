@@ -67,7 +67,7 @@ namespace BSMulti_Installer
 
                     if(Directory.Exists(bsdir + @"\Libs\Native"))
                     {
-                        Directory.Delete(bsdir + @"\Libs\Native");
+                        Directory.Delete(bsdir + @"\Libs\Native", true);
                     }
                 }
                 if(checkBox5.Checked == true)

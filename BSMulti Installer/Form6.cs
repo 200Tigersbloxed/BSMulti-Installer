@@ -73,6 +73,18 @@ namespace BSMulti_Installer
                         File.Delete(bsdir + @"\Libs\DynamicOpenVR.dll");
                     }
                 }
+                if(checkBox5.Checked == true)
+                {
+                    if (File.Exists(bsdir + @"\Plugins\DiscordCore.dll"))
+                    {
+                        File.Delete(bsdir + @"\Plugins\DiscordCore.dll");
+                    }
+
+                    if (Directory.Exists(bsdir + @"\Libs\Native"))
+                    {
+                        Directory.Delete(bsdir + @"\Libs\Native", true);
+                    }
+                }
                 label3.Text = "Done!";
                 progressBar1.Value = 100;
             }

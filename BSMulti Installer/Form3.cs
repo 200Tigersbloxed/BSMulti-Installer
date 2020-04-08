@@ -48,6 +48,7 @@ namespace BSMulti_Installer
             Directory.CreateDirectory(@"ZingaboppFiles\multiplayer");
             Directory.CreateDirectory(@"ZingaboppFiles\ca");
             Directory.CreateDirectory(@"ZingaboppFiles\dovr");
+            Directory.CreateDirectory(@"ZingaboppFiles\dc");
             label3.Text = "Status: Downloading File 2/5";
             progressBar1.Value = 40;
             using (var wc = new WebClient())
@@ -87,9 +88,19 @@ namespace BSMulti_Installer
         {
             using (var wc = new WebClient())
             {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completedca);
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completeddc);
                 wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                 wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/dynamicopenvr"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr.zip");
+            }
+        }
+
+        void wc_Completeddc(object sender, AsyncCompletedEventArgs e)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completedca);
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/discordcore"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc.zip");
             }
         }
 
@@ -100,6 +111,7 @@ namespace BSMulti_Installer
             ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer.zip", @"ZingaboppFiles\multiplayer");
             ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca.zip", @"ZingaboppFiles\ca");
             ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr.zip", @"ZingaboppFiles\dovr");
+            ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc.zip", @"ZingaboppFiles\dc");
             label3.Text = "Status: Moving Lib Files 4/5";
             progressBar1.Value = 80;
             System.IO.DirectoryInfo diLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Libs");
@@ -125,6 +137,15 @@ namespace BSMulti_Installer
                 {
                     file.MoveTo(bsdir + @"\Libs\" + file.Name);
                 }
+            }
+            System.IO.DirectoryInfo didcLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc\Libs");
+            if (Directory.Exists(bsdir + @"\Libs\Native"))
+            {
+
+            }
+            else
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc\Libs\Native", bsdir + @"\Libs\Native");
             }
             label3.Text = "Status: Moving Plugin Files 5/5";
             System.IO.DirectoryInfo diPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Plugins");
@@ -182,6 +203,18 @@ namespace BSMulti_Installer
             else
             {
                 Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca\CustomAvatars", bsdir + @"\CustomAvatars");
+            }
+            System.IO.DirectoryInfo didcPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc\Plugins");
+            foreach (FileInfo file in didcPlugins.GetFiles())
+            {
+                if (File.Exists(bsdir + @"\Plugins\" + file.Name))
+                {
+
+                }
+                else
+                {
+                    file.MoveTo(bsdir + @"\Plugins\" + file.Name);
+                }
             }
             label3.Text = "Status: Done!";
             progressBar1.Value = 100;
