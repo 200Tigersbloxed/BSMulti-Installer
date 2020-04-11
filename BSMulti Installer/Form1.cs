@@ -58,5 +58,15 @@ namespace BSMulti_Installer
         {
 
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        void Form8Closed(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
     }
 }

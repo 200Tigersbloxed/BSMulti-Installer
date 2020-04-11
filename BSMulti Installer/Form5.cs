@@ -41,9 +41,16 @@ namespace BSMulti_Installer
                 string selectedPath = folderBrowserDialog1.SelectedPath;
                 if (File.Exists(selectedPath + @"\Beat Saber.exe"))
                 {
-                    button1.Visible = true;
-                    button3.Visible = true;
-                    bsdir = selectedPath;
+                    if(File.Exists(selectedPath + @"\IPA.exe"))
+                    {
+                        button1.Visible = true;
+                        button3.Visible = true;
+                        bsdir = selectedPath;
+                    }
+                    else
+                    {
+                        MessageBox.Show("IPA.exe was not found! Is Beat Saber Modded?", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
@@ -70,6 +77,7 @@ namespace BSMulti_Installer
             Directory.CreateDirectory(@"AndruzzzhkaFiles\dovr");
             Directory.CreateDirectory(@"AndruzzzhkaFiles\ca");
             Directory.CreateDirectory(@"AndruzzzhkaFiles\dc");
+            Directory.CreateDirectory(@"AndruzzzhkaFiles\dep");
             label3.Text = "Status: Downloading Files 2/7";
             progressBar1.Value = 28;
             using (var wc = new WebClient())
@@ -111,11 +119,21 @@ namespace BSMulti_Installer
         {
             using (var wc = new WebClient())
             {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompletedcadll);
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completeddep);
                 wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                 wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/cadll"), AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\CustomAvatar.dll");
             }
             cadll = true;
+        }
+
+        void wc_Completeddep(object sender, AsyncCompletedEventArgs e)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompletedcadll);
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/dep"), AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\dep.zip");
+            }
         }
 
         void wc_DownloadCompletedcadll(object sender, AsyncCompletedEventArgs e)
@@ -128,6 +146,7 @@ namespace BSMulti_Installer
                 ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\dovr.zip", @"AndruzzzhkaFiles\dovr");
                 ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\ca.zip", @"AndruzzzhkaFiles\ca");
                 ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\dc.zip", @"AndruzzzhkaFiles\dc");
+                ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\dep.zip", @"AndruzzzhkaFiles");
                 label3.Text = "Status: Moving Lib Files 4/7";
                 progressBar1.Value = 56;
                 System.IO.DirectoryInfo dimultiplayerLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\multiplayer\Libs");
@@ -175,6 +194,18 @@ namespace BSMulti_Installer
                     }
                 }
                 label3.Text = "Status: Moving Plugin Files 5/7";
+                System.IO.DirectoryInfo didepPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\dep\Plugins");
+                foreach (FileInfo file in didepPlugins.GetFiles())
+                {
+                    if (File.Exists(bsdir + @"\Plugins\" + file.Name))
+                    {
+
+                    }
+                    else
+                    {
+                        file.MoveTo(bsdir + @"\Plugins\" + file.Name);
+                    }
+                }
                 System.IO.DirectoryInfo dimultiplayerPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\AndruzzzhkaFiles\multiplayer\Plugins");
                 foreach (FileInfo file in dimultiplayerPlugins.GetFiles())
                 {

@@ -49,6 +49,7 @@ namespace BSMulti_Installer
             Directory.CreateDirectory(@"ZingaboppFiles\ca");
             Directory.CreateDirectory(@"ZingaboppFiles\dovr");
             Directory.CreateDirectory(@"ZingaboppFiles\dc");
+            Directory.CreateDirectory(@"ZingaboppFiles\dep");
             label3.Text = "Status: Downloading File 2/5";
             progressBar1.Value = 40;
             using (var wc = new WebClient())
@@ -98,9 +99,19 @@ namespace BSMulti_Installer
         {
             using (var wc = new WebClient())
             {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completedca);
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completeddep);
                 wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                 wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/discordcore"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc.zip");
+            }
+        }
+
+        void wc_Completeddep(object sender, AsyncCompletedEventArgs e)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_Completedca);
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/dep"), AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dep.zip");
             }
         }
 
@@ -112,6 +123,7 @@ namespace BSMulti_Installer
             ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\ca.zip", @"ZingaboppFiles\ca");
             ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dovr.zip", @"ZingaboppFiles\dovr");
             ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc.zip", @"ZingaboppFiles\dc");
+            ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dep.zip", @"ZingaboppFiles");
             label3.Text = "Status: Moving Lib Files 4/5";
             progressBar1.Value = 80;
             System.IO.DirectoryInfo diLibs = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Libs");
@@ -148,8 +160,20 @@ namespace BSMulti_Installer
                 Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dc\Libs\Native", bsdir + @"\Libs\Native");
             }
             label3.Text = "Status: Moving Plugin Files 5/5";
-            System.IO.DirectoryInfo diPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Plugins");
+            System.IO.DirectoryInfo diPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dep\Plugins");
             foreach (FileInfo file in diPlugins.GetFiles())
+            {
+                if (File.Exists(bsdir + @"\Plugins\" + file.Name))
+                {
+
+                }
+                else
+                {
+                    file.MoveTo(bsdir + @"\Plugins\" + file.Name);
+                }
+            }
+            System.IO.DirectoryInfo didepPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dep\Plugins");
+            foreach (FileInfo file in didepPlugins.GetFiles())
             {
                 if (File.Exists(bsdir + @"\Plugins\" + file.Name))
                 {
@@ -229,9 +253,16 @@ namespace BSMulti_Installer
                 string selectedPath = folderBrowserDialog1.SelectedPath;
                 if(File.Exists(selectedPath + @"\Beat Saber.exe"))
                 {
-                    button1.Visible = true;
-                    button3.Visible = true;
-                    bsdir = selectedPath;
+                    if(File.Exists(selectedPath + @"\IPA.exe"))
+                    {
+                        button1.Visible = true;
+                        button3.Visible = true;
+                        bsdir = selectedPath;
+                    }
+                    else
+                    {
+                        MessageBox.Show("IPA.exe was not found! Is Beat Saber Modded?", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {

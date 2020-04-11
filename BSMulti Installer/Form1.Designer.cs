@@ -35,6 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -93,7 +94,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(419, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "SERVERS - Coming Soon";
+            this.label3.Text = "SERVERS - Not Finished Yet";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // linkLabel2
@@ -107,11 +108,22 @@
             this.linkLabel2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(169, 239);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(109, 23);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "My Servers - Soon";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 245);
+            this.ClientSize = new System.Drawing.Size(443, 270);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -138,6 +150,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.Button button3;
     }
 }
 
