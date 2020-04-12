@@ -172,7 +172,7 @@ namespace BSMulti_Installer
                     file.MoveTo(bsdir + @"\Plugins\" + file.Name);
                 }
             }
-            System.IO.DirectoryInfo didepPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\dep\Plugins");
+            System.IO.DirectoryInfo didepPlugins = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\ZingaboppFiles\multiplayer\Plugins");
             foreach (FileInfo file in didepPlugins.GetFiles())
             {
                 if (File.Exists(bsdir + @"\Plugins\" + file.Name))
