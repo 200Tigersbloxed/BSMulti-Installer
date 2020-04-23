@@ -34,20 +34,28 @@ namespace BSMulti_Installer
                     bsdir = selectedPath;
                     if(File.Exists(bsdir + @"\UserData\BeatSaberMultiplayer.json"))
                     {
-                        bsml = true;
+                        bsm = true;
                         string json = System.IO.File.ReadAllText(bsdir + @"\UserData\BeatSaberMultiplayer.json");
-                        dynamic bsm = JsonConvert.DeserializeObject(json);
+                        dynamic bsmj = JsonConvert.DeserializeObject(json);
                         var num = 0;
-                        foreach(var k in bsm["_serverHubIPs"])
+                        foreach(var k in bsmj["_serverHubIPs"])
                         {
-                            listBox1.Items.Add((string)bsm._serverHubIPs[num]);
+                            listBox1.Items.Add((string)bsmj._serverHubIPs[num] + ":" + (string)bsmj._serverHubPorts[num]);
                             num = num + 1;
                         }
-                        panel1.Visible = true;
                     }
-                    else
+
+                    if (File.Exists(bsdir + @"\UserData\BeatSaberMultiplayer.json"))
                     {
-                        
+                        bsml = true;
+                        string jsonl = System.IO.File.ReadAllText(bsdir + @"\UserData\BeatSaberMultiplayerLite.json");
+                        dynamic bsmlj = JsonConvert.DeserializeObject(jsonl);
+                        var numl = 0;
+                        foreach (var k in bsmlj["_serverHubIPs"])
+                        {
+                            listBox2.Items.Add((string)bsmlj._serverHubIPs[numl] + ":" + (string)bsmlj._serverHubPorts[numl]);
+                            numl = numl + 1;
+                        }
                     }
                 }
                 else
@@ -61,10 +69,21 @@ namespace BSMulti_Installer
         {
             if(bsm == true)
             {
-                string json = System.IO.File.ReadAllText(bsdir + @"\UserData\BeatSaberMultiplayer.json");
-                dynamic bsmcj = JsonConvert.DeserializeObject(json);
-
+                
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(bsml == true)
+            {
+                System.Diagnostics.Process.Start(bsdir + @"\UserData\BeatSaberMultiplayerLite.json");
+            }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(bsdir + @"\UserData\BeatSaberMultiplayer.json");
         }
     }
 }

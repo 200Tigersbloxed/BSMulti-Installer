@@ -73,7 +73,8 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(774, 136);
             this.label4.TabIndex = 3;
-            this.label4.Text = resources.GetString("label4.Text");
+            this.label4.Text = "Andruzzzhka\'s multiplayer is STABLE and is expected to work most of the time.\r\n\r\n" +
+    "Positives:\r\n+ Avatars\r\n+ Player Requests";
             // 
             // label5
             // 

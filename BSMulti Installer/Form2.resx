@@ -117,20 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label4.Text" xml:space="preserve">
-    <value>Andruzzzhka's multiplayer is currently EXPERIMENTAL and is expected to bug at some times, but it does have a couple good things about it.
-
-Positives:
-+ Avatars
-+ Player Requests
-
-Bugs/Negatives:
-- You have to leave and re-join the room for every song change
-- Scores won't upload to ScoreSaber
-- Scores won't save to your song</value>
-  </data>
   <data name="label6.Text" xml:space="preserve">
-    <value>Zingabopp's Multiplayer has been out longer than Andruzzzhka's, and is good if you want a stable working version of Multiplayer. That's really all I can say about it...
+    <value>Zingabopp's Multiplayer has been out longer than Andruzzzhka's, but may have tiny issues at some points.
+(No Avatars)
 
 Positives:
 + Stable
