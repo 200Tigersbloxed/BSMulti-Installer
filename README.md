@@ -1,10 +1,13 @@
 # BSMulti-Installer
 Install and Uninstall Beat Saber Multiplayer Easily
 
-![alt text](https://tigersserver.xyz/wp-content/uploads/2020/04/bsmi.png)
+![alt text](https://tigersserver.xyz/wp-content/uploads/2020/05/bsmi2.png)
 
 ## ATTENTION
 To update or switch versions, you will need to uninstall first, then install, otherwise it won't work.
+
+Also check out the wiki for help before creating issues
+https://github.com/200Tigersbloxed/BSMulti-Installer/wiki
 
 okay now time for actual information
 
