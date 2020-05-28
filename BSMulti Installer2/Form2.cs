@@ -188,13 +188,13 @@ namespace BSMulti_Installer2
 
         void wc_DownloadCompleteddc(object sender, AsyncCompletedEventArgs e)
         {
-            statuslabel.Text = "Status: Downloading CustomAvatars.dll 5/6";
+            statuslabel.Text = "Status: Downloading CustomAvatar.dll 5/6";
             progressBar1.Value = 60;
             using (var wc = new WebClient())
             {
                 wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompletedcadll);
                 wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/cadll"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\CustomAvatars.dll");
+                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/cadll"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\CustomAvatar.dll");
             }
         }
 
@@ -234,7 +234,7 @@ namespace BSMulti_Installer2
                 {
                     if(dir.Name == "ca")
                     {
-                        DirectoryInfo cadi = new DirectoryInfo(@"Files\ca");
+                        DirectoryInfo cadi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca");
                         if (Directory.Exists(bsl + @"\CustomAvatars")) { }
                         else
                         {
@@ -243,7 +243,7 @@ namespace BSMulti_Installer2
                         if (Directory.Exists(bsl + @"\DynamicOpenVR")) { }
                         else
                         {
-                            Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(dir.ToString(), bsl + @"\DynamicOpenVR");
+                            Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\DynamicOpenVR", bsl + @"\DynamicOpenVR");
                         }
                         foreach (DirectoryInfo cadir in cadi.GetDirectories())
                         {
@@ -276,7 +276,7 @@ namespace BSMulti_Installer2
                                     if (Directory.Exists(bsl + @"\Libs\Native")) { }
                                     else
                                     {
-                                        Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(dcnativedir.ToString(), bsl + @"\Libs\Native");
+                                        Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\dc\Libs\Native", bsl + @"\Libs\Native");
                                     }
                                 }
                             }
@@ -359,16 +359,16 @@ namespace BSMulti_Installer2
                         }
                     }
                 }
-                if (File.Exists(@"Files\CustomAvatars.dll"))
+                if (File.Exists(@"Files\CustomAvatar.dll"))
                 {
-                    if(File.Exists(bsl + @"\Plugins\CustomAvatars.dll"))
+                    if(File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\CustomAvatars.dll");
-                        File.Move(@"Files\CustomAvatars.dll", bsl + @"\Plugins\CustomAvatars.dll");
+                        File.Delete(bsl + @"\Plugins\CustomAvatar.dll");
+                        File.Move(@"Files\CustomAvatar.dll", bsl + @"\Plugins\CustomAvatar.dll");
                     }
                     else
                     {
-                        File.Move(@"Files\CustomAvatars.dll", bsl + @"\Plugins\CustomAvatars.dll");
+                        File.Move(@"Files\CustomAvatar.dll", bsl + @"\Plugins\CustomAvatar.dll");
                     }
                 }
                 statuslabel.Text = "Status: Complete!";
@@ -442,9 +442,9 @@ namespace BSMulti_Installer2
                 }
                 if(checkBox4.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\CustomAvatars.dll"))
+                    if (File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\CustomAvatars.dll");
+                        File.Delete(bsl + @"\Plugins\CustomAvatar.dll");
                     }
                     Directory.Delete(bsl + @"\DynamicOpenVR", true);
                 }
