@@ -23,7 +23,8 @@ yeah
 All you do is download the latest release, unzip, run the executable, allow it past screen thingy (it says it's dangerous cause it's not signed), select which multiplayer you want to install, select your Beat Saber directory, and press start and it's done.
 
 ## I need help with installing it
-There's help and info inside of the executable, just look for the blue text and click that.
+read the wiki
+https://github.com/200Tigersbloxed/BSMulti-Installer/wiki
 
 ## Somethings wrong/doesn't do what it's supposed to do/broken lol
 Submit an issue at https://github.com/200Tigersbloxed/BSMulti-Installer/issues
