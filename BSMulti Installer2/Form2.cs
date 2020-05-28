@@ -238,7 +238,7 @@ namespace BSMulti_Installer2
                         if (Directory.Exists(bsl + @"\CustomAvatars")) { }
                         else
                         {
-                            Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(dir.ToString(), bsl + @"\CustomAvatars");
+                            Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\CustomAvatars", bsl + @"\CustomAvatars");
                         }
                         if (Directory.Exists(bsl + @"\DynamicOpenVR")) { }
                         else
