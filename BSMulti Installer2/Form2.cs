@@ -359,9 +359,11 @@ namespace BSMulti_Installer2
                         }
                     }
                 }
+            if(multiselected == "a")
+            {
                 if (File.Exists(@"Files\CustomAvatar.dll"))
                 {
-                    if(File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
+                    if (File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
                     {
                         File.Delete(bsl + @"\Plugins\CustomAvatar.dll");
                         File.Move(@"Files\CustomAvatar.dll", bsl + @"\Plugins\CustomAvatar.dll");
@@ -371,6 +373,8 @@ namespace BSMulti_Installer2
                         File.Move(@"Files\CustomAvatar.dll", bsl + @"\Plugins\CustomAvatar.dll");
                     }
                 }
+            }
+                
                 statuslabel.Text = "Status: Complete!";
             progressBar1.Value = 100;
             allowinstalluninstall = true;
@@ -412,6 +416,26 @@ namespace BSMulti_Installer2
                     else
                     {
                         continuewithuninstall = false; 
+                    }
+                }
+            }
+            if (multiselected == "z")
+            {
+                if (File.Exists(bsl + @"\Plugins\BeatSaberMultiplayerLite.dll"))
+                {
+                    File.Delete(bsl + @"\Plugins\BeatSaberMultiplayerLite.dll");
+                    continuewithuninstall = true;
+                }
+                else
+                {
+                    DialogResult dialogResult2 = MessageBox.Show("Multiplayer Lite was not found! Would you like to continue?", "Uh Oh!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dialogResult2 == DialogResult.Yes)
+                    {
+                        continuewithuninstall = true;
+                    }
+                    else
+                    {
+                        continuewithuninstall = false;
                     }
                 }
             }

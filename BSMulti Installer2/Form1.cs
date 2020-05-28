@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Management;
+using System.Net;
 
 namespace BSMulti_Installer2
 {
@@ -40,6 +41,7 @@ namespace BSMulti_Installer2
         string oculusinstallpath = "";
         public string bsl;
         public bool allownext = false;
+        public string version = "v2.0.3";
 
         public Form1()
         {
@@ -49,7 +51,19 @@ namespace BSMulti_Installer2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            WebClient client = new WebClient();
+            Stream stream = client.OpenRead("https://pastebin.com/raw/S8v9a7Ba");
+            StreamReader reader = new StreamReader(stream);
+            String content = reader.ReadToEnd();
+            if(version != content)
+            {
+                DialogResult drUpdate = MessageBox.Show("BSMulti-Installer is not up to date! Would you like to download the newest version?", "Uh Oh!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if(drUpdate == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start("https://github.com/200Tigersbloxed/BSMulti-Installer/releases/latest");
+                    Application.Exit();
+                }
+            }
         }
 
         private void panel1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
