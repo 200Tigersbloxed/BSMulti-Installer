@@ -148,7 +148,7 @@
             this.button2.Size = new System.Drawing.Size(122, 38);
             this.button2.TabIndex = 7;
             this.button2.TabStop = false;
-            this.button2.Text = "OCULUS (TESTING)";
+            this.button2.Text = "OCULUS";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 

@@ -219,7 +219,7 @@ namespace BSMulti_Installer2
         {
                 statuslabel.Text = "Status: Extracting Files";
             progressBar1.Value = 80;
-            DirectoryInfo di = new DirectoryInfo("Files");
+            DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Files");
                 foreach (FileInfo file in di.GetFiles())
                 {
                     string[] splitdot = file.Name.Split('.');
@@ -255,7 +255,7 @@ namespace BSMulti_Installer2
                     }
                     if(dir.Name == "dc")
                     {
-                        DirectoryInfo dcdi = new DirectoryInfo(@"Files\dc");
+                        DirectoryInfo dcdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dc");
                         foreach (DirectoryInfo dcdir in dcdi.GetDirectories())
                         {
                             if (dcdir.Name == "Plugins")
@@ -265,7 +265,7 @@ namespace BSMulti_Installer2
                                     if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
                                     else
                                     {
-                                        file.MoveTo(bsl + @"\Plugins\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
                                     }
                                 }
                             }
@@ -284,7 +284,7 @@ namespace BSMulti_Installer2
                     }
                     if(dir.Name == "dep")
                     {
-                        DirectoryInfo depdi = new DirectoryInfo(@"Files\dep\dep");
+                        DirectoryInfo depdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dep\dep");
                         foreach (DirectoryInfo depdir in depdi.GetDirectories())
                         {
                             if (depdir.Name == "Plugins")
@@ -294,7 +294,7 @@ namespace BSMulti_Installer2
                                     if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
                                     else
                                     {
-                                        file.MoveTo(bsl + @"\Plugins\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
                                     }
                                 }
                             }
@@ -302,7 +302,7 @@ namespace BSMulti_Installer2
                     }
                     if (dir.Name == "dovr")
                     {
-                        DirectoryInfo dovrdi = new DirectoryInfo(@"Files\dovr");
+                        DirectoryInfo dovrdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dovr");
                         foreach (DirectoryInfo dovrdir in dovrdi.GetDirectories())
                         {
                             if (dovrdir.Name == "Plugins")
@@ -312,7 +312,7 @@ namespace BSMulti_Installer2
                                     if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
                                     else
                                     {
-                                        file.MoveTo(bsl + @"\Plugins\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
                                     }
                                 }
                             }
@@ -323,7 +323,7 @@ namespace BSMulti_Installer2
                                     if (File.Exists(bsl + @"\Libs\" + file.Name)) { }
                                     else
                                     {
-                                        file.MoveTo(bsl + @"\Libs\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
                                     }
                                 }
                             }
@@ -331,7 +331,7 @@ namespace BSMulti_Installer2
                     }
                     if (dir.Name == "multiplayer")
                     {
-                        DirectoryInfo multiplayerdi = new DirectoryInfo(@"Files\multiplayer");
+                        DirectoryInfo multiplayerdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\multiplayer");
                         foreach (DirectoryInfo multiplayerdir in multiplayerdi.GetDirectories())
                         {
                             if (multiplayerdir.Name == "Plugins")
@@ -341,7 +341,7 @@ namespace BSMulti_Installer2
                                     if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
                                     else
                                     {
-                                        file.MoveTo(bsl + @"\Plugins\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
                                     }
                                 }
                             }
@@ -352,7 +352,7 @@ namespace BSMulti_Installer2
                                     if (File.Exists(bsl + @"\Libs\" + file.Name)) { }
                                     else
                                     {
-                                        file.MoveTo(bsl + @"\Libs\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
                                     }  
                                 }
                             }

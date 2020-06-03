@@ -41,7 +41,7 @@ namespace BSMulti_Installer2
         string oculusinstallpath = "";
         public string bsl;
         public bool allownext = false;
-        public string version = "v2.0.3";
+        public string version = "v2.0.4";
 
         public Form1()
         {
@@ -64,6 +64,9 @@ namespace BSMulti_Installer2
                     Application.Exit();
                 }
             }
+            checkForMessage();
+            
+            Directory.CreateDirectory("Files");
         }
 
         private void panel1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -97,8 +100,7 @@ namespace BSMulti_Installer2
                         {
                             userownssteam = true;
                             string phrase = rk4.GetValue("SteamPath").ToString();
-                            string[] capdrive = phrase.Split(':');
-                            steaminstallpath = capdrive[0].ToUpper() + ":" + @"\Steam";
+                            steaminstallpath = phrase;
                         }
                     }
                 }
@@ -109,7 +111,7 @@ namespace BSMulti_Installer2
                 MessageBox.Show("Uh Oh!", "Steam Could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else{
-                bsl = steaminstallpath + @"\steamapps\common\Beat Saber";
+                bsl = steaminstallpath + @"/steamapps/common/Beat Saber";
                 if(Directory.Exists(bsl))
                 {
                     if(File.Exists(bsl + @"\Beat Saber.exe"))
@@ -120,6 +122,7 @@ namespace BSMulti_Installer2
                             pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                             button4.BackColor = SystemColors.MenuHighlight;
                             allownext = true;
+                            runVerifyCheck();
                         }
                         else
                         {
@@ -153,23 +156,30 @@ namespace BSMulti_Installer2
         private void button2_Click(object sender, EventArgs e)
         {
             //Find the Oculus Folder
-            DriveInfo[] allDrives = DriveInfo.GetDrives();
-            foreach (DriveInfo d in allDrives)
+            RegistryKey rk1s = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            if (rk1s != null)
             {
-                if (d.Name != @"C:\")
+                RegistryKey rk2 = rk1s.OpenSubKey("Software");
+                if (rk2 != null)
                 {
-                    if (Directory.Exists(d.Name + @"Oculus"))
+                    RegistryKey rk3 = rk2.OpenSubKey("WOW6432Node");
+                    if (rk3 != null)
                     {
-                        oculusinstallpath = d.Name + @"Oculus";
-                        userownsoculus = true;
-                    }
-                }
-                else
-                {
-                    if (Directory.Exists(d.Name + @"Program Files (x86)\Oculus"))
-                    {
-                        oculusinstallpath = d.Name + @"Program Files (x86)\Oculus";
-                        userownsoculus = true;
+                        RegistryKey rk4 = rk3.OpenSubKey("Oculus VR, LLC");
+                        if (rk4 != null)
+                        {
+                            RegistryKey rk5 = rk4.OpenSubKey("Oculus");
+                            if(rk5 != null)
+                            {
+                                RegistryKey rk6 = rk5.OpenSubKey("Config");
+                                if(rk6 != null)
+                                {
+                                    userownsoculus = true;
+                                    string phrase = rk6.GetValue("InitialAppLibrary").ToString();
+                                    oculusinstallpath = phrase;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -180,7 +190,7 @@ namespace BSMulti_Installer2
             }
             else
             {
-                bsl = oculusinstallpath + @"\Software\hyperbolic-magnetism-beat-saber";
+                bsl = oculusinstallpath + @"/Software/Software/hyperbolic-magnetism-beat-saber";
                 if (Directory.Exists(bsl))
                 {
                     if (File.Exists(bsl + @"\Beat Saber.exe"))
@@ -191,6 +201,7 @@ namespace BSMulti_Installer2
                             pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                             button4.BackColor = SystemColors.MenuHighlight;
                             allownext = true;
+                            runVerifyCheck();
                         }
                         else
                         {
@@ -226,6 +237,7 @@ namespace BSMulti_Installer2
                         pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                         button4.BackColor = SystemColors.MenuHighlight;
                         allownext = true;
+                        runVerifyCheck();
                     }
                     else
                     {
@@ -236,6 +248,61 @@ namespace BSMulti_Installer2
                 {
                     MessageBox.Show("Beat Saber was not found in this location! Is Beat Saber Installed?", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        private bool verifyPermissions(string dir)
+        {
+            try
+            {
+                System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(dir);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+        }
+
+        void runVerifyCheck()
+        {
+            if (verifyPermissions(bsl)) { }
+            else
+            {
+                MessageBox.Show("Please run the installer as administrator to continue! (Beat Saber Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+            if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Files"))
+            {
+                if (verifyPermissions(AppDomain.CurrentDomain.BaseDirectory + @"\Files")) { }
+                else
+                {
+                    MessageBox.Show("Please run the installer as administrator to continue! (Installer Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory("Files");
+                if (verifyPermissions(AppDomain.CurrentDomain.BaseDirectory + @"\Files")) { }
+                else
+                {
+                    MessageBox.Show("Please run the installer as administrator to continue! (Installer Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+            }
+        }
+
+        void checkForMessage()
+        {
+            WebClient client = new WebClient();
+            Stream stream = client.OpenRead("https://pastebin.com/raw/vaXRephy");
+            StreamReader reader = new StreamReader(stream);
+            String content = reader.ReadToEnd();
+            string[] splitcontent = content.Split('|');
+            if(splitcontent[0] == "Y")
+            {
+                MessageBox.Show(splitcontent[1], "Message From Developer", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
