@@ -27,6 +27,9 @@ read the wiki
 https://github.com/200Tigersbloxed/BSMulti-Installer/wiki
 
 ## Somethings wrong/doesn't do what it's supposed to do/broken lol
+
+**BEFORE SUBMITTING AN ISSUE, MAKE SURE THE ISSUE HAS TO DO WITH THE INSTALLER AND NOT THE MULTIPLAYER MOD!**
+
 Submit an issue at https://github.com/200Tigersbloxed/BSMulti-Installer/issues
 "how do i do that"
 login to your github account, press big green button in top right that says "New Issue", and describe the issue the best you can.
