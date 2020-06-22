@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Management;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace BSMulti_Installer2
 {
@@ -41,7 +42,7 @@ namespace BSMulti_Installer2
         string oculusinstallpath = "";
         public string bsl;
         public bool allownext = false;
-        public string version = "v2.0.4";
+        public string version = "v2.0.5";
 
         public Form1()
         {
@@ -51,6 +52,21 @@ namespace BSMulti_Installer2
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // check for internet
+            if (CheckForInternetConnection() == true) { }
+            else
+            {
+                MessageBox.Show("An Internet Connection is required!", "Not Connected to Internet", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+            // check if user can access website
+            if (CheckForWebsiteConnection() == true) { }
+            else
+            {
+                MessageBox.Show("Failed to connect to https://tigersserver.xyz. Please try again soon.", "Failed to Connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+
             WebClient client = new WebClient();
             Stream stream = client.OpenRead("https://pastebin.com/raw/S8v9a7Ba");
             StreamReader reader = new StreamReader(stream);
@@ -64,6 +80,7 @@ namespace BSMulti_Installer2
                     Application.Exit();
                 }
             }
+
             checkForMessage();
             
             Directory.CreateDirectory("Files");
@@ -123,6 +140,7 @@ namespace BSMulti_Installer2
                             button4.BackColor = SystemColors.MenuHighlight;
                             allownext = true;
                             runVerifyCheck();
+                            findMultiplayerVersion();
                         }
                         else
                         {
@@ -202,6 +220,7 @@ namespace BSMulti_Installer2
                             button4.BackColor = SystemColors.MenuHighlight;
                             allownext = true;
                             runVerifyCheck();
+                            findMultiplayerVersion();
                         }
                         else
                         {
@@ -238,6 +257,7 @@ namespace BSMulti_Installer2
                         button4.BackColor = SystemColors.MenuHighlight;
                         allownext = true;
                         runVerifyCheck();
+                        findMultiplayerVersion();
                     }
                     else
                     {
@@ -293,6 +313,55 @@ namespace BSMulti_Installer2
             }
         }
 
+        void findMultiplayerVersion()
+        {
+            string mj;
+            string mlj;
+            // check for the json data
+            if(File.Exists(bsl + @"/UserData/BeatSaberMultiplayer.json"))
+            {
+                mj = bsl + @"/UserData/BeatSaberMultiplayer.json";
+                if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayer.dll")) {
+                    // multiplayer is installed
+                    string json = System.IO.File.ReadAllText(mj);
+                    dynamic bsmj = JsonConvert.DeserializeObject(json);
+                    label8.Text = "Multiplayer Version: " + bsmj["_modVersion"];
+                }
+                else
+                {
+                    // no multiplayer
+                    label8.Text = "Multiplayer Version: Not Installed";
+                }
+            }
+            else
+            {
+                // no multiplayer
+                label8.Text = "Multiplayer Version: Not Installed";
+            }
+
+            if (File.Exists(bsl + @"/UserData/BeatSaberMultiplayer.json"))
+            {
+                mlj = bsl + @"/UserData/BeatSaberMultiplayerLite.json";
+                if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayerLite.dll"))
+                {
+                    // multiplayer is installed
+                    string json = System.IO.File.ReadAllText(mlj);
+                    dynamic bsmj = JsonConvert.DeserializeObject(json);
+                    label9.Text = "MultiplayerLite Version: " + bsmj["_modVersion"];
+                }
+                else
+                {
+                    // no multiplayer
+                    label9.Text = "MultiplayerLite Version: Not Installed";
+                }
+            }
+            else
+            {
+                // no multiplayer
+                label9.Text = "MultiplayerLite Version: Not Installed";
+            }
+        }
+
         void checkForMessage()
         {
             WebClient client = new WebClient();
@@ -303,6 +372,34 @@ namespace BSMulti_Installer2
             if(splitcontent[0] == "Y")
             {
                 MessageBox.Show(splitcontent[1], "Message From Developer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        public static bool CheckForInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("http://google.com/generate_204"))
+                    return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool CheckForWebsiteConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("https://tigersserver.xyz"))
+                    return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 

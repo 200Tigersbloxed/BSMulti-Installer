@@ -217,30 +217,39 @@ namespace BSMulti_Installer2
 
         void InstallMultiContinued()
         {
-                statuslabel.Text = "Status: Extracting Files";
+            statuslabel.Text = "Status: Extracting Files";
             progressBar1.Value = 80;
             DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Files");
-                foreach (FileInfo file in di.GetFiles())
+            foreach (FileInfo file in di.GetFiles())
+            {
+                string[] splitdot = file.Name.Split('.');
+                if (splitdot[1] == "zip")
                 {
-                    string[] splitdot = file.Name.Split('.');
-                    if (splitdot[1] == "zip")
-                    {
-                        ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\" + splitdot[0] + @".zip", @"Files\" + splitdot[0]);
-                    }
+                    ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\" + splitdot[0] + @".zip", @"Files\" + splitdot[0]);
                 }
-                statuslabel.Text = "Status: Moving Files";
+            }
+            statuslabel.Text = "Status: Moving Files";
             progressBar1.Value = 90;
             foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                if (multiselected == "a")
                 {
-                    if(dir.Name == "ca")
+                    if (dir.Name == "ca")
                     {
                         DirectoryInfo cadi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca");
-                        if (Directory.Exists(bsl + @"\CustomAvatars")) { }
+                        if (Directory.Exists(bsl + @"\CustomAvatars"))
+                        {
+                            // dont u dare delete someone's custom avatars folder
+                        }
                         else
                         {
                             Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\CustomAvatars", bsl + @"\CustomAvatars");
                         }
-                        if (Directory.Exists(bsl + @"\DynamicOpenVR")) { }
+                        if (Directory.Exists(bsl + @"\DynamicOpenVR"))
+                        {
+                            Directory.Delete(bsl + @"\DynamicOpenVR", true);
+                            Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\DynamicOpenVR", bsl + @"\DynamicOpenVR");
+                        }
                         else
                         {
                             Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\DynamicOpenVR", bsl + @"\DynamicOpenVR");
@@ -253,27 +262,34 @@ namespace BSMulti_Installer2
                             }
                         }
                     }
-                    if(dir.Name == "dc")
+                }
+                if(dir.Name == "dc")
+                {
+                    DirectoryInfo dcdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dc");
+                    foreach (DirectoryInfo dcdir in dcdi.GetDirectories())
                     {
-                        DirectoryInfo dcdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dc");
-                        foreach (DirectoryInfo dcdir in dcdi.GetDirectories())
-                        {
-                            if (dcdir.Name == "Plugins")
-                            {
-                                foreach (FileInfo file in dcdir.GetFiles())
+                    if (dcdir.Name == "Plugins")
+                    {
+                         foreach (FileInfo file in dcdir.GetFiles())
+                         {
+                            if (File.Exists(bsl + @"\Plugins\" + file.Name)) {
+                                    File.Delete(bsl + @"\Plugins\" + file.Name);
+                                    File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
+                                }
+                               else
                                 {
-                                    if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
-                                    else
-                                    {
-                                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                                    }
+                                   File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
                                 }
                             }
+                         }
                             if (dcdir.Name == "Libs")
                             {
                                 foreach (DirectoryInfo dcnativedir in dcdir.GetDirectories())
                                 {
-                                    if (Directory.Exists(bsl + @"\Libs\Native")) { }
+                                    if (Directory.Exists(bsl + @"\Libs\Native")) {
+                                    Directory.Delete(bsl + @"\Libs\Native", true);
+                                    Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\dc\Libs\Native", bsl + @"\Libs\Native");
+                                }
                                     else
                                     {
                                         Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\dc\Libs\Native", bsl + @"\Libs\Native");
@@ -291,7 +307,10 @@ namespace BSMulti_Installer2
                             {
                                 foreach (FileInfo file in depdir.GetFiles())
                                 {
-                                    if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
+                                    if (File.Exists(bsl + @"\Plugins\" + file.Name)) {
+                                    File.Delete(bsl + @"\Plugins\" + file.Name);
+                                    File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
+                                }
                                     else
                                     {
                                         File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
@@ -300,6 +319,8 @@ namespace BSMulti_Installer2
                             }
                         }
                     }
+                if (multiselected == "a")
+                {
                     if (dir.Name == "dovr")
                     {
                         DirectoryInfo dovrdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dovr");
@@ -309,7 +330,11 @@ namespace BSMulti_Installer2
                             {
                                 foreach (FileInfo file in dovrdir.GetFiles())
                                 {
-                                    if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
+                                    if (File.Exists(bsl + @"\Plugins\" + file.Name))
+                                    {
+                                        File.Delete(bsl + @"\Plugins\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
+                                    }
                                     else
                                     {
                                         File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
@@ -320,7 +345,11 @@ namespace BSMulti_Installer2
                             {
                                 foreach (FileInfo file in dovrdir.GetFiles())
                                 {
-                                    if (File.Exists(bsl + @"\Libs\" + file.Name)) { }
+                                    if (File.Exists(bsl + @"\Libs\" + file.Name))
+                                    {
+                                        File.Delete(bsl + @"\Libs\" + file.Name);
+                                        File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
+                                    }
                                     else
                                     {
                                         File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
@@ -329,6 +358,7 @@ namespace BSMulti_Installer2
                             }
                         }
                     }
+                }
                     if (dir.Name == "multiplayer")
                     {
                         DirectoryInfo multiplayerdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\multiplayer");
@@ -338,7 +368,10 @@ namespace BSMulti_Installer2
                             {
                                 foreach (FileInfo file in multiplayerdir.GetFiles())
                                 {
-                                    if (File.Exists(bsl + @"\Plugins\" + file.Name)) { }
+                                    if (File.Exists(bsl + @"\Plugins\" + file.Name)) {
+                                    File.Delete(bsl + @"\Plugins\" + file.Name);
+                                    File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
+                                }
                                     else
                                     {
                                         File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
@@ -349,7 +382,10 @@ namespace BSMulti_Installer2
                             {
                                 foreach (FileInfo file in multiplayerdir.GetFiles())
                                 {
-                                    if (File.Exists(bsl + @"\Libs\" + file.Name)) { }
+                                    if (File.Exists(bsl + @"\Libs\" + file.Name)) {
+                                    File.Delete(bsl + @"\Libs\" + file.Name);
+                                    File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
+                                }
                                     else
                                     {
                                         File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
@@ -491,6 +527,13 @@ namespace BSMulti_Installer2
                         File.Delete(bsl + @"\Libs\DynamicOpenVR.dll");
                     }
                 }
+                if(checkBox7.Checked == true)
+                {
+                    if(File.Exists(bsl + @"\Plugins\ScoreSaber.dll"))
+                    {
+                        File.Delete(bsl + @"\Plugins\ScoreSaber.dll");
+                    }
+                }
             }
             statuslabel.Text = "Status: Complete!";
             progressBar1.Value = 100;
@@ -533,6 +576,11 @@ namespace BSMulti_Installer2
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/200Tigersbloxed/BSMulti-Installer/wiki/Which-Multiplayer-Should-I-Install%3F");
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
