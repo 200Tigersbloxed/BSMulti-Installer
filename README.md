@@ -4,6 +4,9 @@ Install and Uninstall Beat Saber Multiplayer Easily
 ![alt text](https://tigersserver.xyz/wp-content/uploads/2020/05/bsmi2.png)
 
 ## ATTENTION
+**THIS REPO. IS NOT FOR SUPPORT! DO NOT OPEN AN ISSUE ASKING FOR SUPPORT! PLEASE JOIN THE BSMG DISCORD AND ASK FOR SUPPORT IN #pc-help!!!**
+https://discord.gg/beatsabermods
+
 Please make sure the Multiplayer Installer has it's own dedicated Directory!
 
 Also check out the wiki for help before creating issues
