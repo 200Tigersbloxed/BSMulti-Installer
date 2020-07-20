@@ -25,6 +25,11 @@ yeah
 
 All you do is download the latest release, unzip, run the executable, allow it past screen thingy (it says it's dangerous cause it's not signed), select which multiplayer you want to install, select your Beat Saber directory, and press start and it's done.
 
+## Is it a virus? It says "Windows Protected your PC"?
+If you get the smart screen filter, you get it because the application isn't signed with a certificate. I assure you, this isn't a virus. Why would I make a virus and release it's source to GitHub? KEKW 5Head moment ladies and gentlemen.
+
+![virus](https://drive.tigersserver.xyz/uploads/200Tigersbloxed/Screen%20Shot%202020-07-20%20at%2010.15.37%20AM.png)
+
 ## I need help with installing it
 read the wiki
 https://github.com/200Tigersbloxed/BSMulti-Installer/wiki
