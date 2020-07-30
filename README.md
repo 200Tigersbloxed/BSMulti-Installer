@@ -30,6 +30,8 @@ If you get the smart screen filter, you get it because the application isn't sig
 
 ![virus](https://drive.tigersserver.xyz/uploads/200Tigersbloxed/Screen%20Shot%202020-07-20%20at%2010.15.37%20AM.png)
 
+*(this image is in no way to be harmful towards anyone)*
+
 ## I need help with installing it
 read the wiki
 https://github.com/200Tigersbloxed/BSMulti-Installer/wiki
