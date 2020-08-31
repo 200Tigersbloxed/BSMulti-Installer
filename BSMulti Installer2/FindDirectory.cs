@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Management;
 using System.Net;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace BSMulti_Installer2
 {
@@ -126,7 +127,7 @@ namespace BSMulti_Installer2
 
             if(userownssteam == false)
             {
-                MessageBox.Show("Uh Oh!", "Steam Could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Uh Oh!", "Steam could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else{
                 bsl = steaminstallpath + @"/steamapps/common/Beat Saber";
@@ -139,7 +140,6 @@ namespace BSMulti_Installer2
                             textBox1.Text = bsl;
                             pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                             pictureBox1.Show();
-                            button4.BackColor = SystemColors.MenuHighlight;
                             allownext = true;
                             runVerifyCheck();
                             findMultiplayerVersion();
@@ -151,24 +151,25 @@ namespace BSMulti_Installer2
                     }
                     else
                     {
-                        MessageBox.Show("Beat Saber.exe Could not be found! Is Beat Saber Installed?", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Beat Saber.exe Could not be found! Is Beat Saber installed?", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Beat Saber Could not be found! Is Beat Saber Installed under Steam?", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Beat Saber Could not be found! Is Beat Saber installed in the main steamapps folder? You might need to find it manually.", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     bsl = "";
                 }
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void installButton_Click(object sender, EventArgs e)
         {
             if (allownext)
             {
-                ChooseOptions f2 = new ChooseOptions();
-                f2.bsl = bsl;
-                f2.Show();
+                Install installScreen = new Install();
+                Debug.Write(bsl);
+                installScreen.bsl = bsl;
+                installScreen.Show();
                 this.Hide();
             }
         }
@@ -220,7 +221,6 @@ namespace BSMulti_Installer2
                             textBox1.Text = bsl;
                             pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                             pictureBox1.Show();
-                            button4.BackColor = SystemColors.MenuHighlight;
                             allownext = true;
                             runVerifyCheck();
                             findMultiplayerVersion();
@@ -258,7 +258,6 @@ namespace BSMulti_Installer2
                         textBox1.Text = bsl;
                         pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                         pictureBox1.Show();
-                        button4.BackColor = SystemColors.MenuHighlight;
                         allownext = true;
                         runVerifyCheck();
                         findMultiplayerVersion();
@@ -319,6 +318,7 @@ namespace BSMulti_Installer2
 
         void findMultiplayerVersion()
         {
+            bool anyMultiplayerInstalled = false;
             string mj;
             string mlj;
             // check for the json data
@@ -330,6 +330,7 @@ namespace BSMulti_Installer2
                     string json = System.IO.File.ReadAllText(mj);
                     dynamic bsmj = JsonConvert.DeserializeObject(json);
                     label8.Text = "Multiplayer Version: " + bsmj["_modVersion"];
+                    anyMultiplayerInstalled = true;
                 }
                 else
                 {
@@ -348,10 +349,21 @@ namespace BSMulti_Installer2
                 mlj = bsl + @"/UserData/BeatSaberMultiplayerLite.json";
                 if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayerLite.dll"))
                 {
+                    anyMultiplayerInstalled = true;
+
                     // multiplayer is installed
-                    string json = System.IO.File.ReadAllText(mlj);
-                    dynamic bsmj = JsonConvert.DeserializeObject(json);
-                    label9.Text = "MultiplayerLite Version: " + bsmj["_modVersion"];
+                    if (File.Exists(mlj))
+                    {
+                        // File in question actually exists, wasn't there for me during testing
+                        string json = System.IO.File.ReadAllText(mlj);
+                        dynamic bsmj = JsonConvert.DeserializeObject(json);
+                        label9.Text = "MultiplayerLite Version: " + bsmj["_modVersion"];
+                    }
+                    else
+                    {
+                        label9.Text = "MultiplayerLite Version: Installed but Unknown";
+                    }
+
                 }
                 else
                 {
@@ -363,6 +375,15 @@ namespace BSMulti_Installer2
             {
                 // no multiplayer
                 label9.Text = "MultiplayerLite Version: Not Installed";
+            }
+            if (anyMultiplayerInstalled)
+            {
+                uninstallButton.BackColor = SystemColors.MenuHighlight;
+                installButton.BackColor = SystemColors.GrayText;
+            } else
+            {
+                uninstallButton.BackColor = SystemColors.GrayText;
+                installButton.BackColor = SystemColors.MenuHighlight;
             }
         }
 
@@ -413,6 +434,22 @@ namespace BSMulti_Installer2
         }
 
         private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void uninstallButton_Click(object sender, EventArgs e)
+        {
+            if (allownext)
+            {
+                Uninstall uninstallScreen = new Uninstall();
+                uninstallScreen.bsl = bsl;
+                uninstallScreen.Show();
+                this.Hide();
+            }
+        }
+
+        private void label8_Click(object sender, EventArgs e)
         {
 
         }

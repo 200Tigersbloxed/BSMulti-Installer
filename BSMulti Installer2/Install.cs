@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace BSMulti_Installer2
 {
-    public partial class ChooseOptions : Form
+    public partial class Install : Form
     {
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -39,7 +39,7 @@ namespace BSMulti_Installer2
         public bool allowinstalluninstall = false;
         public string bsl { get; set; }
 
-        public ChooseOptions()
+        public Install()
         {
             InitializeComponent();
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
@@ -55,22 +55,21 @@ namespace BSMulti_Installer2
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void multiplayerButton_Click(object sender, EventArgs e)
         {
             if (currentlyinstallinguninstalling == false)
             {
                 multiselected = "a";
                 pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                 pictureBox1.Show();
-                button3.BackColor = SystemColors.MenuHighlight;
-                button4.BackColor = SystemColors.MenuHighlight;
-                button1.BackColor = Color.Green;
-                button2.BackColor = SystemColors.MenuHighlight;
+                installButton.BackColor = SystemColors.MenuHighlight;
+                multiplayerButton.BackColor = Color.Green;
+                multiplayerLiteButton.BackColor = SystemColors.MenuHighlight;
                 allowinstalluninstall = true;
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void multiplayerLiteButton_Click(object sender, EventArgs e)
         {
             if (currentlyinstallinguninstalling == false)
             {
@@ -78,10 +77,9 @@ namespace BSMulti_Installer2
                 pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
                 pictureBox1.Show();
 
-                button3.BackColor = SystemColors.MenuHighlight;
-                button4.BackColor = SystemColors.MenuHighlight;
-                button2.BackColor = Color.Green;
-                button1.BackColor = SystemColors.MenuHighlight;
+                installButton.BackColor = SystemColors.MenuHighlight;
+                multiplayerLiteButton.BackColor = Color.Green;
+                multiplayerButton.BackColor = SystemColors.MenuHighlight;
                 allowinstalluninstall = true;
             }
         }
@@ -92,8 +90,7 @@ namespace BSMulti_Installer2
             progressBar1.Value = 10;
                 allowinstalluninstall = false;
                 currentlyinstallinguninstalling = true;
-                button3.BackColor = SystemColors.GrayText;
-                button4.BackColor = SystemColors.GrayText;
+                installButton.BackColor = SystemColors.GrayText;
                 Directory.CreateDirectory("Files");
                 DirectoryInfo di = new DirectoryInfo("Files");
                 foreach (FileInfo file in di.GetFiles())
@@ -121,8 +118,7 @@ namespace BSMulti_Installer2
                         statuslabel.Text = "Status: Failed";
                         allowinstalluninstall = true;
                         currentlyinstallinguninstalling = false;
-                        button3.BackColor = SystemColors.MenuHighlight;
-                        button4.BackColor = SystemColors.MenuHighlight;
+                        installButton.BackColor = SystemColors.MenuHighlight;
                         MessageBox.Show("Beat Saber Multiplayer Lite is installed! Installation Failed. Please Uninstall Zingabopp's Multiplayer Lite to continue installing Andruzzzhka's Multiplayer", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
@@ -137,8 +133,7 @@ namespace BSMulti_Installer2
                         statuslabel.Text = "Status: Failed";
                         allowinstalluninstall = true;
                         currentlyinstallinguninstalling = false;
-                        button3.BackColor = SystemColors.MenuHighlight;
-                        button4.BackColor = SystemColors.MenuHighlight;
+                        installButton.BackColor = SystemColors.MenuHighlight;
                         MessageBox.Show("Beat Saber Multiplayer is installed! Installation Failed. Please Uninstall Andruzzzhka's Multiplayer to continue installing Zingabopp's Multiplayer Lite", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
@@ -419,137 +414,12 @@ namespace BSMulti_Installer2
             progressBar1.Value = 100;
             allowinstalluninstall = true;
                 currentlyinstallinguninstalling = false;
-                button3.BackColor = SystemColors.MenuHighlight;
-                button4.BackColor = SystemColors.MenuHighlight;
+                installButton.BackColor = SystemColors.MenuHighlight;
                 DialogResult dialogResult = MessageBox.Show("Multiplayer is installed! Would you like to exit?", "Complete!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
                     Application.Exit();
                 }
-        }
-
-        void UninstallMulti()
-        {
-            bool continuewithuninstall = false;
-            statuslabel.Text = "Status: Preparing";
-            progressBar1.Value = 25;
-            allowinstalluninstall = false;
-            currentlyinstallinguninstalling = true;
-            button3.BackColor = SystemColors.GrayText;
-            button4.BackColor = SystemColors.GrayText;
-            statuslabel.Text = "Status: Uninstalling Multiplayer";
-            progressBar1.Value = 50;
-            if (multiselected == "a")
-            {
-                if(File.Exists(bsl + @"\Plugins\BeatSaberMultiplayer.dll"))
-                {
-                    File.Delete(bsl + @"\Plugins\BeatSaberMultiplayer.dll");
-                    continuewithuninstall = true;
-                }
-                else
-                {
-                    DialogResult dialogResult2 = MessageBox.Show("Multiplayer was not found! Would you like to continue?", "Uh Oh!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if(dialogResult2 == DialogResult.Yes)
-                    {
-                        continuewithuninstall = true;
-                    }
-                    else
-                    {
-                        continuewithuninstall = false; 
-                    }
-                }
-            }
-            if (multiselected == "z")
-            {
-                if (File.Exists(bsl + @"\Plugins\BeatSaberMultiplayerLite.dll"))
-                {
-                    File.Delete(bsl + @"\Plugins\BeatSaberMultiplayerLite.dll");
-                    continuewithuninstall = true;
-                }
-                else
-                {
-                    DialogResult dialogResult2 = MessageBox.Show("Multiplayer Lite was not found! Would you like to continue?", "Uh Oh!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (dialogResult2 == DialogResult.Yes)
-                    {
-                        continuewithuninstall = true;
-                    }
-                    else
-                    {
-                        continuewithuninstall = false;
-                    }
-                }
-            }
-            statuslabel.Text = "Status: Uninstalling Dependencies";
-            progressBar1.Value = 75;
-            if (continuewithuninstall == true)
-            {
-                if(checkBox1.Checked == true)
-                {
-                    if(File.Exists(bsl + @"\Plugins\SongCore.dll"))
-                    {
-                        File.Delete(bsl + @"\Plugins\SongCore.dll");
-                    }
-                }
-                if(checkBox2.Checked == true)
-                {
-                    if (File.Exists(bsl + @"\Plugins\BSML.dll"))
-                    {
-                        File.Delete(bsl + @"\Plugins\BSML.dll");
-                    }
-                }
-                if(checkBox3.Checked == true)
-                {
-                    if (File.Exists(bsl + @"\Plugins\BS_Utils.dll"))
-                    {
-                        File.Delete(bsl + @"\Plugins\BS_Utils.dll");
-                    }
-                }
-                if(checkBox4.Checked == true)
-                {
-                    if (File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
-                    {
-                        File.Delete(bsl + @"\Plugins\CustomAvatar.dll");
-                    }
-                    Directory.Delete(bsl + @"\DynamicOpenVR", true);
-                }
-                if(checkBox5.Checked == true)
-                {
-                    if (File.Exists(bsl + @"\Plugins\DiscordCore.dll"))
-                    {
-                        File.Delete(bsl + @"\Plugins\DiscordCore.dll");
-                    }
-                    Directory.Delete(bsl + @"\Libs\Native", true);
-                }
-                if(checkBox6.Checked == true)
-                {
-                    if (File.Exists(bsl + @"\Plugins\DynamicOpenVR.manifest"))
-                    {
-                        File.Delete(bsl + @"\Plugins\DynamicOpenVR.manifest");
-                    }
-                    if (File.Exists(bsl + @"\Libs\DynamicOpenVR.dll"))
-                    {
-                        File.Delete(bsl + @"\Libs\DynamicOpenVR.dll");
-                    }
-                }
-                if(checkBox7.Checked == true)
-                {
-                    if(File.Exists(bsl + @"\Plugins\ScoreSaber.dll"))
-                    {
-                        File.Delete(bsl + @"\Plugins\ScoreSaber.dll");
-                    }
-                }
-            }
-            statuslabel.Text = "Status: Complete!";
-            progressBar1.Value = 100;
-            allowinstalluninstall = true;
-            currentlyinstallinguninstalling = false;
-            button3.BackColor = SystemColors.MenuHighlight;
-            button4.BackColor = SystemColors.MenuHighlight;
-            DialogResult dialogResult = MessageBox.Show("Multiplayer is uninstalled :( Would you like to exit?", "Complete!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResult == DialogResult.Yes)
-            {
-                Application.Exit();
-            }
         }
 
         private void closeForm1_Click(object sender, EventArgs e)
@@ -568,15 +438,6 @@ namespace BSMulti_Installer2
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (allowinstalluninstall)
-            {
-                progressBar1.Value = 0;
-                UninstallMulti();
-            }
-        }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/200Tigersbloxed/BSMulti-Installer/wiki/Which-Multiplayer-Should-I-Install%3F");
@@ -588,6 +449,36 @@ namespace BSMulti_Installer2
         }
 
         private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void multiplayerDescription_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Install_Load(object sender, EventArgs e)
         {
 
         }
