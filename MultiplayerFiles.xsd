@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="mp-component">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Identifies a component and includes a URL to the download.</xs:documentation>
+    </xs:annotation>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element name="MoveTo" maxOccurs="1" minOccurs="1">
+            <xs:annotation>
+              <xs:documentation xml:lang="en">The downloaded file should be moved to this directory.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="Filename" type="xs:string" use="optional">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="en">Optional: Filename to use, if not specified the name from the download will be used.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ExtractTo" type="xs:string" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation xml:lang="en">This downloaded file is a zip archive and should be extracted to this location. Leave blank to use the root location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:choice>
+        <xs:element name="Requires" maxOccurs="1" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Requirement">
+                <xs:annotation>
+                  <xs:documentation xml:lang="en">Identifies a required component. Must match a file and version listed in 'Files'.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="Name" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="en">Name of the required component.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Version" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="en">Version of the required component.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Name" type="xs:string" use="required" >
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Name of the component.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Version" type="xs:string" use="required" >
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Version of the component.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="URL" type="xs:string" use="required" >
+        <xs:annotation>
+          <xs:documentation xml:lang="en">URL used to download the component.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+  </xs:complexType>
+  
+  <xs:element name="ModList">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element name="MultiplayerMod" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Dependencies" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="en">List of components required for the multiplayer mod.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Component" type="mp-component" maxOccurs="unbounded" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="OptionalComponents" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="en">List of optional components the multiplayer mod can use.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Component" type="mp-component" maxOccurs="unbounded" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="en">Name of the multiplayer mod.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

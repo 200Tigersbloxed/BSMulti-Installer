@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1082
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSMulti Installer2", "BSMulti Installer2\BSMulti Installer2.csproj", "{575D406E-DD62-4ABA-A254-FB06F37D26F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{19F02B9A-9F5B-45E5-9633-2B2F11D8CDDE}"
+	ProjectSection(SolutionItems) = preProject
+		MultiplayerFiles.xml = MultiplayerFiles.xml
+		MultiplayerFiles.xsd = MultiplayerFiles.xsd
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
