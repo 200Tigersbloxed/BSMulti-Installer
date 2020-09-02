@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		MultiplayerFiles.xsd = MultiplayerFiles.xsd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSMulti-Installer-Tests", "MSMulti-Installer-Tests\MSMulti-Installer-Tests.csproj", "{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BSMulti-Installer-Tests", "BSMulti-Installer-Tests\BSMulti-Installer-Tests.csproj", "{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

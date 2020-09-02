@@ -5,7 +5,7 @@ using System.Text;
 using BSMulti_Installer2.Utilities;
 using System.Linq;
 
-namespace MSMulti_Installer_Tests.BeatSaberToolsTests
+namespace BSMulti_Installer_Tests.UtilitiesTests
 {
     [TestClass]
     public class BeatSaberLocatorTests

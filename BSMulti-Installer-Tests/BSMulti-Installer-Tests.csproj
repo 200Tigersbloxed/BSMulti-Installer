@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>MSMulti_Installer_Tests</RootNamespace>
+    <RootNamespace>BSMulti_Installer_Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>

@@ -196,7 +196,7 @@
     </xs:attribute>
   </xs:complexType>
 
-  <xs:element name="MultiplayerInstaller">
+  <xs:element name="MultiplayerInstallerConfiguration">
     <xs:complexType>
       <xs:all>
         <xs:element name="ModGroup">

@@ -4,7 +4,7 @@ using System.IO;
 using System;
 using System.Linq;
 
-namespace MSMulti_Installer_Tests.XMLParsing
+namespace BSMulti_Installer_Tests.XMLParsing
 {
     [TestClass]
     public class UnitTest1
@@ -13,7 +13,7 @@ namespace MSMulti_Installer_Tests.XMLParsing
         [TestMethod]
         public void TestMethod1()
         {
-            MultiplayerInstaller installerDef = MultiplayerInstaller.Deserialize(Path.Combine(DataPath, "Test1.xml"));
+            MultiplayerInstallerConfiguration installerDef = MultiplayerInstallerConfiguration.Deserialize(Path.Combine(DataPath, "Test1.xml"));
             Validator.ValidateXML(installerDef);
             Console.WriteLine("GetSortedDependencies with MultiplayerMod:");
             var comps = installerDef.GetSortedDependencies(installerDef.ModGroup[0]);
