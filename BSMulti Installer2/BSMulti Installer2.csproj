@@ -79,10 +79,12 @@
     <Compile Include="Utilities\VersionCheck.cs" />
     <Compile Include="Utilities\WebUtils.cs" />
     <Compile Include="XML\Extensions.cs" />
-    <Compile Include="XML\MultiplayerFiles.cs" />
+    <Compile Include="XML\MultiplayerFiles.Additions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XML\MultiplayerFiles.Generated.cs" />
+    <Compile Include="XML\MultiplayerFiles.cs">
+      <DependentUpon>MultiplayerFiles.Additions.cs</DependentUpon>
+    </Compile>
     <Compile Include="XML\MultiplayerInstallerSerializationException.cs" />
     <Compile Include="XML\Validator.cs" />
     <EmbeddedResource Include="GameInstallSelector.resx">
