@@ -22,7 +22,7 @@ namespace BSMulti_Installer2.Utilities
         {
             var installList = new List<BeatSaberInstall>();
             var steamInstalls = GetSteamBeatSaberInstalls();
-            for(int i = 0; i < steamInstalls.Length; i++)
+            for (int i = 0; i < steamInstalls.Length; i++)
             {
                 if (!installList.Any(instl => instl.InstallPath.Equals(steamInstalls[i].InstallPath)))
                     installList.Add(steamInstalls[i]);
@@ -122,53 +122,50 @@ namespace BSMulti_Installer2.Utilities
         /// Attempts to get the Beat Saber game version from the given install directory. Returns null if it fails.
         /// </summary>
         /// <remarks>
-        /// Uses the implementation from https://github.com/Assistant/ModAssistant
+        /// Uses a modified implementation of https://github.com/Assistant/ModAssistant
         /// </remarks>
         /// <param name="gameDir"></param>
         /// <returns></returns>
-        public static string GetVersion(string gameDir)
+        public static string GetVersion(string gameDir, out Exception exception)
         {
+            exception = null;
             string filename = Path.Combine(gameDir, "Beat Saber_Data", "globalgamemanagers");
             if (!File.Exists(filename))
                 return null;
             try
             {
-                using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
-                {
-                    byte[] file = File.ReadAllBytes(filename);
-                    byte[] bytes = new byte[16];
+                byte[] file = File.ReadAllBytes(filename);
+                string str = Encoding.Default.GetString(file);
+                string versionLocation = "public.app-category.games";
+                int startIndex = str.IndexOf(versionLocation) + 136;
+                int length = str.IndexOfAny(IllegalCharacters, startIndex) - startIndex;
+                string version = str.Substring(startIndex, length);
 
-                    fs.Read(file, 0, Convert.ToInt32(fs.Length));
-                    fs.Close();
-                    int index = Encoding.Default.GetString(file).IndexOf("public.app-category.games") + 136;
-
-                    Array.Copy(file, index, bytes, 0, 16);
-                    string version = Encoding.Default.GetString(bytes).Trim(IllegalCharacters);
-
-                    return version;
-                }
+                return version;
             }
-            catch
+            catch(Exception ex)
             {
+                exception = ex;
                 return null;
             }
         }
+
+        public static string GetVersion(string gameDir) => GetVersion(gameDir, out _);
 
         public static bool IsBeatSaberDirectory(string path)
         {
             if (string.IsNullOrEmpty(path?.Trim()))
                 return false;
-            DirectoryInfo bsDir = null;
             try
             {
-                bsDir = new DirectoryInfo(path);
+                DirectoryInfo bsDir = new DirectoryInfo(path); if (bsDir.Exists)
+                {
+                    var files = bsDir.GetFiles("Beat Saber.exe");
+                    return files.Count() > 0;
+                }
             }
-            catch { return false; }
-            if (bsDir.Exists)
-            {
-                var files = bsDir.GetFiles("Beat Saber.exe");
-                return files.Count() > 0;
-            }
+            catch { }
+
             return false;
         }
     }
