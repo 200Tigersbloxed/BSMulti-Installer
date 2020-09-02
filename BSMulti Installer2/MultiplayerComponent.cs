@@ -20,7 +20,7 @@ namespace BSMulti_Installer2
         /// <returns></returns>
         public virtual async Task<bool> Install(string beatSaberPath)
         {
-
+            throw new NotImplementedException();
         }
 
 

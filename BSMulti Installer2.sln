@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		MultiplayerFiles.xsd = MultiplayerFiles.xsd
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSMulti-Installer-Tests", "MSMulti-Installer-Tests\MSMulti-Installer-Tests.csproj", "{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{575D406E-DD62-4ABA-A254-FB06F37D26F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{575D406E-DD62-4ABA-A254-FB06F37D26F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{575D406E-DD62-4ABA-A254-FB06F37D26F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26A3E6AE-EDCA-4D0B-8E64-BBA15CC935A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
