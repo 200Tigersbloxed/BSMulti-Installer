@@ -1,7 +1,9 @@
 ﻿
+using BSMulti_Installer2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
@@ -60,7 +62,7 @@ namespace BSMulti_Installer2.XML
                 throw new InvalidOperationException($"Component {c.Name} ({c.Version}) was not found in ComponentDefinitions.");
         }
 
-        
+
 
         private Dictionary<string, MultiplayerComponent> _componentsDict;
         public static string GetComponentString(string name, string version) => $"{name}|{version}";
@@ -100,26 +102,63 @@ namespace BSMulti_Installer2.XML
     public partial class MultiplayerMod
     {
 
-       
+
     }
 
-  
+
     public partial class ComponentInstallation
     {
 
-       
     }
 
-  
-    public partial class MoveTo
+
+    public partial class MoveTo : IComponentInstaller
     {
+        public void Install(string source, string destinationDirectory)
+        {
+            FileInfo file = new FileInfo(Path.Combine(destinationDirectory, Destination));
 
-        
+            Directory.CreateDirectory(file.DirectoryName);
+            if (file.Exists)
+                file.Delete();
+            File.Copy(source, file.FullName);
+        }
+    }
+    public partial class ExtractTo : IComponentInstaller
+    {
+        public void Install(string source, string destinationDirectory)
+        {
+            if (!string.IsNullOrEmpty(Directory))
+                destinationDirectory = Path.Combine(destinationDirectory, Directory);
+            System.IO.Directory.CreateDirectory(destinationDirectory);
+            using (var fs = System.IO.File.OpenRead(source))
+            using (var zip = new ZipArchive(fs, ZipArchiveMode.Read, false))
+            {
+                if(File == null || File.Length == 0)
+                {
+                    zip.ExtractToDirectory(destinationDirectory, true);
+                    return;
+                }
+                foreach (var file in File)
+                {
+                    var entry = zip.GetEntry(file.ZipPath.Replace('\\', '/'));
+                    FileInfo fInfo = new FileInfo(Path.Combine(destinationDirectory, file.Path));
+                    System.IO.Directory.CreateDirectory(fInfo.DirectoryName);
+                    entry.ExtractToFile(fInfo.FullName, true);
+                }
+            }
+        }
     }
 
-   
     public partial class MultiplayerComponent
     {
+        public IComponentInstaller GetInstaller()
+        {
+            if (Installation?.Item is IComponentInstaller installer)
+                return installer;
+            else return new ExtractTo();
+        }
+
         public override string ToString()
         {
             return MultiplayerInstallerConfiguration.GetComponentString(Name, Version);

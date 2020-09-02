@@ -43,9 +43,9 @@
         <Description>A modified version of CustomAvatars to support Multiplayer.</Description>
       </Metadata>
       <Installation>
-        <MoveTo Filename="CustomAvatars.dll">Plugins</MoveTo>
+        <MoveTo Filename="CustomAvatar.dll">Plugins</MoveTo>
         <Files>
-          <File Path="Plugins\CustomAvatars.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" RequireHashMatch="true" />
+          <File Path="Plugins\CustomAvatar.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" RequireHashMatch="true" />
         </Files>
       </Installation>
       <Requires>
@@ -67,7 +67,16 @@
         </Files>
       </Installation>
     </Component>
-    <Component Name="CommonDependencies" Version="1.0.0" URL="https://tigersserver.xyz/dep" />
+    <Component Name="CommonDependencies" Version="1.0.0" URL="https://tigersserver.xyz/dep" >
+      <Installation>
+        <ExtractTo>
+          <File ZipPath="dep\Plugins\SongCore.dll" Path="Plugins\SongCore.dll" />
+          <File ZipPath="dep\Plugins\BSML.dll" Path="Plugins\BSML.dll" />
+          <File ZipPath="dep\Plugins\ScoreSaber.dll" Path="Plugins\ScoreSaber.dll" />
+          <File ZipPath="dep\Plugins\BS_Utils.dll" Path="Plugins\BS_Utils.dll" />
+        </ExtractTo>
+      </Installation>
+    </Component>
     <Component Name="BeatSaberPlaylistsLib" Version="1.0.2" URL="https://github.com/Zingabopp/BeatSaberPlaylistsLib/releases/download/1.0.2/BeatSaberPlaylistsLib-1.0.2-bs1.11.0-0201474.zip" />
   </ComponentDefinitions>
 

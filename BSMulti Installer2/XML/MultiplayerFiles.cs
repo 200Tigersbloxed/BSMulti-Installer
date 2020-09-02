@@ -188,7 +188,7 @@ namespace BSMulti_Installer2.XML {
         private ComponentFile[] filesField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("ExtractTo", typeof(string))]
+        [System.Xml.Serialization.XmlElementAttribute("ExtractTo", typeof(ExtractTo))]
         [System.Xml.Serialization.XmlElementAttribute("MoveTo", typeof(MoveTo))]
         public object Item {
             get {
@@ -214,34 +214,107 @@ namespace BSMulti_Installer2.XML {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
     [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.w3.org/BSMultiInstaller")]
-    public partial class MoveTo {
+    public partial class ExtractTo {
         
-        private string filenameField;
+        private ComponentFile[] fileField;
         
-        private string valueField;
+        private string directoryField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Filename {
+        [System.Xml.Serialization.XmlElementAttribute("File")]
+        public ComponentFile[] File {
             get {
-                return this.filenameField;
+                return this.fileField;
             }
             set {
-                this.filenameField = value;
+                this.fileField = value;
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Directory {
             get {
-                return this.valueField;
+                return this.directoryField;
             }
             set {
-                this.valueField = value;
+                this.directoryField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.w3.org/BSMultiInstaller")]
+    public partial class ComponentFile {
+        
+        private string pathField;
+        
+        private string zipPathField;
+        
+        private string sHA1Field;
+        
+        private bool requireHashMatchField;
+        
+        private bool requireHashMatchFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Path {
+            get {
+                return this.pathField;
+            }
+            set {
+                this.pathField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ZipPath {
+            get {
+                return this.zipPathField;
+            }
+            set {
+                this.zipPathField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string SHA1 {
+            get {
+                return this.sHA1Field;
+            }
+            set {
+                this.sHA1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public bool RequireHashMatch {
+            get {
+                return this.requireHashMatchField;
+            }
+            set {
+                this.requireHashMatchField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool RequireHashMatchSpecified {
+            get {
+                return this.requireHashMatchFieldSpecified;
+            }
+            set {
+                this.requireHashMatchFieldSpecified = value;
             }
         }
     }
@@ -414,60 +487,20 @@ namespace BSMulti_Installer2.XML {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
     [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.w3.org/BSMultiInstaller")]
-    public partial class ComponentFile {
+    public partial class MoveTo {
         
-        private string pathField;
-        
-        private string sHA1Field;
-        
-        private bool requireHashMatchField;
-        
-        private bool requireHashMatchFieldSpecified;
+        private string destinationField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Path {
+        public string Destination {
             get {
-                return this.pathField;
+                return this.destinationField;
             }
             set {
-                this.pathField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string SHA1 {
-            get {
-                return this.sHA1Field;
-            }
-            set {
-                this.sHA1Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool RequireHashMatch {
-            get {
-                return this.requireHashMatchField;
-            }
-            set {
-                this.requireHashMatchField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool RequireHashMatchSpecified {
-            get {
-                return this.requireHashMatchFieldSpecified;
-            }
-            set {
-                this.requireHashMatchFieldSpecified = value;
+                this.destinationField = value;
             }
         }
     }

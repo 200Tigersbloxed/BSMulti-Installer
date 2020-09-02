@@ -9,25 +9,35 @@
     <xs:annotation>
       <xs:documentation xml:lang="en">The downloaded file should be moved to this directory.</xs:documentation>
     </xs:annotation>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute name="Filename" type="xs:string" use="optional">
-            <xs:annotation>
-              <xs:documentation xml:lang="en">Optional: Filename to use, if not specified the name from the download will be used.</xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-        </xs:extension>
-      </xs:simpleContent>
+    <xs:attribute name="Destination" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Destination full path, relative to the root directory.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
-  
+
+  <xs:complexType name="ExtractTo">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Describes how the downloaded file should be extracted.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0">
+      <xs:element name="File" type="ComponentFile" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Directory" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Optional: Destination directory, defined file extractions will be relative to this.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
   <xs:complexType name="ComponentInstallation">
     <xs:annotation>
       <xs:documentation xml:lang="en">Defines how to install a component. Not needed for zips to be extracted to the root folder.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice>
-        <xs:element name="MoveTo" maxOccurs="1" minOccurs="1" type="MoveTo" />
-        <xs:element name="ExtractTo" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:element name="MoveTo" type="MoveTo" maxOccurs="1" minOccurs="1" />
+        <xs:element name="ExtractTo" type="ExtractTo" minOccurs="0" maxOccurs="1">
           <xs:annotation>
             <xs:documentation xml:lang="en">This downloaded file is a zip archive and should be extracted to this location. Leave blank to use the root location.</xs:documentation>
           </xs:annotation>
@@ -88,6 +98,11 @@
     <xs:attribute name="Path" type="xs:string" use="required" >
       <xs:annotation>
         <xs:documentation xml:lang="en">Path to the file, relative to the root directory.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ZipPath" type="xs:string" use="optional" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Path to the file in the zip archive.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="SHA1" type="xs:string" use="optional" >
