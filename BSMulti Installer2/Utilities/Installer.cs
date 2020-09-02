@@ -91,12 +91,14 @@ namespace BSMulti_Installer2.Utilities
             var components = config.GetSortedDependencies(allComponents);
 
             int numDownloads = allComponents.Count + 1;
+            int stage = 0;
             for (int i = 0; i < components.Length; i++)
             {
+                stage++;
                 MultiplayerComponent c = components[i];
                 try
                 {
-                    overallProgress?.Report(new OverallProgress(c.Name, i + 1, numDownloads));
+                    overallProgress?.Report(new OverallProgress(c.Name, stage, numDownloads));
                     string filePath = await DownloadComponent(c.Name, c.Version, c.URL, tempDir, componentProgress, cancellationToken);
                     TempFiles.Add(filePath);
                     InstallComponent(c.GetInstallation(), c.Name, filePath);
@@ -105,11 +107,6 @@ namespace BSMulti_Installer2.Utilities
                 {
                     throw new ComponentInstallationException(c, ex.Message, ex);
                 }
-            }
-
-            foreach (var op in IncludedOptionals)
-            {
-
             }
 
             MultiplayerMod mod = SelectedMod;
@@ -128,7 +125,7 @@ namespace BSMulti_Installer2.Utilities
             {
                 throw new InstallationException($"Error installing '{mod.Name}': {ex.Message}", ex);
             }
-            //CleanupTemp();
+            CleanupTemp();
         }
 
         private void InstallComponent(ComponentInstallation installation, string name, string sourceFile)

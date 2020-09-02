@@ -199,10 +199,12 @@ namespace BSMulti_Installer2
 
                 statuslabel.Text = "Status: Complete!";
                 pbOverall.Value = 100;
+                await Task.Delay(1000);
                 allowinstalluninstall = true;
                 currentlyinstallinguninstalling = false;
                 btnUninstall.BackColor = SystemColors.MenuHighlight;
                 btnInstall.BackColor = SystemColors.MenuHighlight;
+
                 DialogResult dialogResult = MessageBox.Show($"{SelectedMultiplayerMod.Name} v{SelectedMultiplayerMod.Version} is installed! Would you like to exit?", "Complete!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -229,7 +231,7 @@ namespace BSMulti_Installer2
 
             }
             statuslabel.Text = $"Status: Downloading {progress.Component} {progress.Stage}/{progress.TotalStages}";
-            pbOverall.Value = (progress.Stage * 100) / progress.TotalStages;
+            pbOverall.Value = ((progress.Stage - 1) * 100) / progress.TotalStages;
         }
 
 
