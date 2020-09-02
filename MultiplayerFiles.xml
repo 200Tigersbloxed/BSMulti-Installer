@@ -45,7 +45,7 @@
       <Installation>
         <MoveTo Filename="CustomAvatars.dll">Plugins</MoveTo>
         <Files>
-          <File Path="Plugins\CustomAvatars.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" />
+          <File Path="Plugins\CustomAvatars.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" RequireHashMatch="true" />
         </Files>
       </Installation>
       <Requires>

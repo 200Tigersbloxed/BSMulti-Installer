@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<MultiplayerInstaller>
+<MultiplayerInstaller xmlns="http://www.w3.org/BSMultiInstaller"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.w3.org/BSMultiInstaller https://raw.githubusercontent.com/Zingabopp/BSMulti-Installer/refactor/MultiplayerFiles.xsd">
 
   <ModGroup>
     <MultiplayerMod Name="Multiplayer" Version="0.7.2.3" MinGameVersion="1.8.0" MaxGameVersion="1.11.1"
@@ -43,7 +45,7 @@
       <Installation>
         <MoveTo Filename="CustomAvatars.dll">Plugins</MoveTo>
         <Files>
-          <File Path="Plugins\CustomAvatars.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" />
+          <File Path="Plugins\CustomAvatars.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" RequireHashMatch="true" />
         </Files>
       </Installation>
       <Requires>

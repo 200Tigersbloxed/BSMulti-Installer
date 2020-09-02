@@ -358,6 +358,7 @@ namespace BSMulti_Installer2.XML
     {
         private string path;
         private string sha1Field;
+        private bool requireHashMatchField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttribute()]
@@ -381,6 +382,15 @@ namespace BSMulti_Installer2.XML
                 this.sha1Field = value;
             }
         }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttribute()]
+        public bool RequireHashMatch
+        {
+            get { return requireHashMatchField; }
+            set { requireHashMatchField = value; }
+        }
+
     }
 
     /// <remarks/>

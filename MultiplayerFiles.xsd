@@ -94,6 +94,11 @@
         <xs:documentation xml:lang="en">SHA1 Hash of the file.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="RequireHashMatch" type="xs:boolean" use="optional" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Require the SHA1 hash match for installion to be considered successful.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="mp-component-metadata">
