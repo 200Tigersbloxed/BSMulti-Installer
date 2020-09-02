@@ -27,7 +27,7 @@ namespace BSMulti_Installer2.XML
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.w3.org/BSMultiInstaller", IsNullable = false)]
     public partial class MultiplayerInstaller
     {
         public static MultiplayerInstaller Deserialize(Stream xmlStream)
