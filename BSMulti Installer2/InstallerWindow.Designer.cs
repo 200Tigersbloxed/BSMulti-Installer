@@ -44,8 +44,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.btnUninstall = new System.Windows.Forms.Button();
             this.statuslabel = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.pbOverall = new System.Windows.Forms.ProgressBar();
+            this.pbComponent = new System.Windows.Forms.ProgressBar();
             this.chkSongCore = new System.Windows.Forms.CheckBox();
             this.chkBsml = new System.Windows.Forms.CheckBox();
             this.chkBsUtils = new System.Windows.Forms.CheckBox();
@@ -249,19 +249,19 @@
             this.statuslabel.TabIndex = 32;
             this.statuslabel.Text = "Status: ";
             // 
-            // progressBar1
+            // pbOverall
             // 
-            this.progressBar1.Location = new System.Drawing.Point(16, 411);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(361, 23);
-            this.progressBar1.TabIndex = 33;
+            this.pbOverall.Location = new System.Drawing.Point(16, 411);
+            this.pbOverall.Name = "pbOverall";
+            this.pbOverall.Size = new System.Drawing.Size(361, 23);
+            this.pbOverall.TabIndex = 33;
             // 
-            // progressBar2
+            // pbComponent
             // 
-            this.progressBar2.Location = new System.Drawing.Point(16, 449);
-            this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(361, 23);
-            this.progressBar2.TabIndex = 34;
+            this.pbComponent.Location = new System.Drawing.Point(16, 449);
+            this.pbComponent.Name = "pbComponent";
+            this.pbComponent.Size = new System.Drawing.Size(361, 23);
+            this.pbComponent.TabIndex = 34;
             // 
             // chkSongCore
             // 
@@ -359,8 +359,8 @@
             this.Controls.Add(this.chkBsUtils);
             this.Controls.Add(this.chkBsml);
             this.Controls.Add(this.chkSongCore);
-            this.Controls.Add(this.progressBar2);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.pbComponent);
+            this.Controls.Add(this.pbOverall);
             this.Controls.Add(this.statuslabel);
             this.Controls.Add(this.btnUninstall);
             this.Controls.Add(this.label5);
@@ -405,8 +405,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnUninstall;
         private System.Windows.Forms.Label statuslabel;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.ProgressBar pbOverall;
+        private System.Windows.Forms.ProgressBar pbComponent;
         private System.Windows.Forms.CheckBox chkSongCore;
         private System.Windows.Forms.CheckBox chkBsml;
         private System.Windows.Forms.CheckBox chkBsUtils;

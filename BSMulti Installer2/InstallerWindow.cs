@@ -58,7 +58,7 @@ namespace BSMulti_Installer2
         }
         public bool currentlyinstallinguninstalling = false;
         public bool allowinstalluninstall = false;
-        public string bsl { get; set; }
+        public string BeatSaberDirectory { get; set; }
         public MultiplayerMod AndruzzMod
         {
             get => _andruzzMod;
@@ -102,6 +102,7 @@ namespace BSMulti_Installer2
             if (SelectedMultiplayerMod != null)
             {
                 pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
+                allowinstalluninstall = true;
                 SetButtonEnabled(btnInstall, true, false);
                 SetButtonEnabled(btnUninstall, true, false);
                 SetButtonEnabled(btnSelectAndruzz, AndruzzMod != null, SelectedMultiplayerMod.Name == "Multiplayer");
@@ -178,365 +179,71 @@ namespace BSMulti_Installer2
             }
         }
 
-        void InstallMulti()
+        private async Task InstallMulti()
         {
-            statuslabel.Text = "Status: Preparing";
-            progressBar1.Value = 10;
-            allowinstalluninstall = false;
-            currentlyinstallinguninstalling = true;
-            btnUninstall.BackColor = SystemColors.GrayText;
-            btnInstall.BackColor = SystemColors.GrayText;
-            Directory.CreateDirectory("Files");
-            DirectoryInfo di = new DirectoryInfo("Files");
-            foreach (FileInfo file in di.GetFiles())
+            try
             {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                dir.Delete(true);
-            }
-            Directory.CreateDirectory(@"Files\multiplayer");
-            Directory.CreateDirectory(@"Files\dovr");
-            Directory.CreateDirectory(@"Files\ca");
-            Directory.CreateDirectory(@"Files\dc");
-            Directory.CreateDirectory(@"Files\dep");
-            statuslabel.Text = "Status: Downloading Multiplayer 1/6";
-            progressBar1.Value = 20;
-            //using (var wc = new WebClient())
-            //{
-            //    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompleted);
-            //    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-            //    if (multiselected == "a")
-            //    {
-            //        if (File.Exists(bsl + @"\Plugins\BeatSaberMultiplayerLite.dll"))
-            //        {
-            //            statuslabel.Text = "Status: Failed";
-            //            allowinstalluninstall = true;
-            //            currentlyinstallinguninstalling = false;
-            //            btnUninstall.BackColor = SystemColors.MenuHighlight;
-            //            btnInstall.BackColor = SystemColors.MenuHighlight;
-            //            MessageBox.Show("Beat Saber Multiplayer Lite is installed! Installation Failed. Please Uninstall Zingabopp's Multiplayer Lite to continue installing Andruzzzhka's Multiplayer", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //        }
-            //        else
-            //        {
-            //            wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/andruzzzhkalatest"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\multiplayer.zip");
-            //        }
-            //    }
-            //    else if (multiselected == "z")
-            //    {
-            //        if (File.Exists(bsl + @"\Plugins\BeatSaberMultiplayer.dll"))
-            //        {
-            //            statuslabel.Text = "Status: Failed";
-            //            allowinstalluninstall = true;
-            //            currentlyinstallinguninstalling = false;
-            //            btnUninstall.BackColor = SystemColors.MenuHighlight;
-            //            btnInstall.BackColor = SystemColors.MenuHighlight;
-            //            MessageBox.Show("Beat Saber Multiplayer is installed! Installation Failed. Please Uninstall Andruzzzhka's Multiplayer to continue installing Zingabopp's Multiplayer Lite", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //        }
-            //        else
-            //        {
-            //            wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/zingabopplatest"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\multiplayer.zip");
-            //        }
-            //    }
-            //}
-        }
+                statuslabel.Text = "Status: Preparing";
+                pbOverall.Value = 0;
+                pbComponent.Value = 0;
+                allowinstalluninstall = false;
+                currentlyinstallinguninstalling = true;
 
-        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            progressBar2.Value = e.ProgressPercentage;
-        }
+                Progress<OverallProgress> overallProgress = new Progress<OverallProgress>(OnOverallProgressChanged);
+                Progress<ComponentProgress> componentProgress = new Progress<ComponentProgress>(OnComponentProgressChanged);
+                string outputDir = BeatSaberDirectory;
+                Directory.CreateDirectory(outputDir);
+                Installer installer = new Installer(outputDir, InstallerConfig, SelectedMultiplayerMod, SelectedMultiplayerMod.GetOptionalComponents(InstallerConfig), true);
+                installer.EnsureValidInstaller();
+                await installer.InstallMod(overallProgress, componentProgress);
 
-        void wc_DownloadCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            statuslabel.Text = "Status: Downloading CA 2/6";
-            progressBar1.Value = 30;
-            using (var wc = new WebClient())
-            {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompletedca);
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/customavatars"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca.zip");
-            }
-        }
-
-        void wc_DownloadCompletedca(object sender, AsyncCompletedEventArgs e)
-        {
-            statuslabel.Text = "Status: Downloading DOVR 3/6";
-            progressBar1.Value = 40;
-            using (var wc = new WebClient())
-            {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompleteddovr);
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/dynamicopenvr"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\dovr.zip");
-            }
-        }
-
-        void wc_DownloadCompleteddovr(object sender, AsyncCompletedEventArgs e)
-        {
-            statuslabel.Text = "Status: Downloading DC 4/6";
-            progressBar1.Value = 50;
-            using (var wc = new WebClient())
-            {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompleteddc);
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/discordcore"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\dc.zip");
-            }
-        }
-
-        void wc_DownloadCompleteddc(object sender, AsyncCompletedEventArgs e)
-        {
-            statuslabel.Text = "Status: Downloading CustomAvatar.dll 5/6";
-            progressBar1.Value = 60;
-            using (var wc = new WebClient())
-            {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompletedcadll);
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/cadll"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\CustomAvatar.dll");
-            }
-        }
-
-        void wc_DownloadCompletedcadll(object sender, AsyncCompletedEventArgs e)
-        {
-            statuslabel.Text = "Status: Downloading DEP 6/6";
-            progressBar1.Value = 70;
-            using (var wc = new WebClient())
-            {
-                wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadCompleteddep);
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(new System.Uri("https://tigersserver.xyz/dep"), AppDomain.CurrentDomain.BaseDirectory + @"\Files\dep.zip");
-            }
-        }
-
-        void wc_DownloadCompleteddep(object sender, AsyncCompletedEventArgs e)
-        {
-            InstallMultiContinued();
-        }
-
-        void InstallMultiContinued()
-        {
-            statuslabel.Text = "Status: Extracting Files";
-            progressBar1.Value = 80;
-            DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Files");
-            foreach (FileInfo file in di.GetFiles())
-            {
-                string[] splitdot = file.Name.Split('.');
-                if (splitdot[1] == "zip")
+                statuslabel.Text = "Status: Complete!";
+                pbOverall.Value = 100;
+                allowinstalluninstall = true;
+                currentlyinstallinguninstalling = false;
+                btnUninstall.BackColor = SystemColors.MenuHighlight;
+                btnInstall.BackColor = SystemColors.MenuHighlight;
+                DialogResult dialogResult = MessageBox.Show($"{SelectedMultiplayerMod.Name} v{SelectedMultiplayerMod.Version} is installed! Would you like to exit?", "Complete!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResult == DialogResult.Yes)
                 {
-                    ZipFile.ExtractToDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\" + splitdot[0] + @".zip", @"Files\" + splitdot[0]);
+                    Application.Exit();
                 }
-            }
-            statuslabel.Text = "Status: Moving Files";
-            progressBar1.Value = 90;
-            foreach (DirectoryInfo dir in di.GetDirectories())
+            }catch(Exception ex)
             {
-                //    if (multiselected == "a")
-                //    {
-                //        if (dir.Name == "ca")
-                //        {
-                //            DirectoryInfo cadi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca");
-                //            if (Directory.Exists(bsl + @"\CustomAvatars"))
-                //            {
-                //                // dont u dare delete someone's custom avatars folder
-                //            }
-                //            else
-                //            {
-                //                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\CustomAvatars", bsl + @"\CustomAvatars");
-                //            }
-                //            if (Directory.Exists(bsl + @"\DynamicOpenVR"))
-                //            {
-                //                Directory.Delete(bsl + @"\DynamicOpenVR", true);
-                //                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\DynamicOpenVR", bsl + @"\DynamicOpenVR");
-                //            }
-                //            else
-                //            {
-                //                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\ca\DynamicOpenVR", bsl + @"\DynamicOpenVR");
-                //            }
-                //            foreach (DirectoryInfo cadir in cadi.GetDirectories())
-                //            {
-                //                if (cadir.Name == "Plugins")
-                //                {
-                //                    // Don't move CustomAvatar's DLL
-                //                }
-                //            }
-                //        }
-                //    }
-                //    if (dir.Name == "dc")
-                //    {
-                //        DirectoryInfo dcdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dc");
-                //        foreach (DirectoryInfo dcdir in dcdi.GetDirectories())
-                //        {
-                //            if (dcdir.Name == "Plugins")
-                //            {
-                //                foreach (FileInfo file in dcdir.GetFiles())
-                //                {
-                //                    if (File.Exists(bsl + @"\Plugins\" + file.Name))
-                //                    {
-                //                        File.Delete(bsl + @"\Plugins\" + file.Name);
-                //                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                    }
-                //                    else
-                //                    {
-                //                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                    }
-                //                }
-                //            }
-                //            if (dcdir.Name == "Libs")
-                //            {
-                //                foreach (DirectoryInfo dcnativedir in dcdir.GetDirectories())
-                //                {
-                //                    if (Directory.Exists(bsl + @"\Libs\Native"))
-                //                    {
-                //                        Directory.Delete(bsl + @"\Libs\Native", true);
-                //                        Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\dc\Libs\Native", bsl + @"\Libs\Native");
-                //                    }
-                //                    else
-                //                    {
-                //                        Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Files\dc\Libs\Native", bsl + @"\Libs\Native");
-                //                    }
-                //                }
-                //            }
-                //        }
-                //    }
-                //    if (dir.Name == "dep")
-                //    {
-                //        DirectoryInfo depdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dep\dep");
-                //        foreach (DirectoryInfo depdir in depdi.GetDirectories())
-                //        {
-                //            if (depdir.Name == "Plugins")
-                //            {
-                //                foreach (FileInfo file in depdir.GetFiles())
-                //                {
-                //                    if (File.Exists(bsl + @"\Plugins\" + file.Name))
-                //                    {
-                //                        File.Delete(bsl + @"\Plugins\" + file.Name);
-                //                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                    }
-                //                    else
-                //                    {
-                //                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                    }
-                //                }
-                //            }
-                //        }
-                //    }
-                //    if (multiselected == "a")
-                //    {
-                //        if (dir.Name == "dovr")
-                //        {
-                //            DirectoryInfo dovrdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\dovr");
-                //            foreach (DirectoryInfo dovrdir in dovrdi.GetDirectories())
-                //            {
-                //                if (dovrdir.Name == "Plugins")
-                //                {
-                //                    foreach (FileInfo file in dovrdir.GetFiles())
-                //                    {
-                //                        if (File.Exists(bsl + @"\Plugins\" + file.Name))
-                //                        {
-                //                            File.Delete(bsl + @"\Plugins\" + file.Name);
-                //                            File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                        }
-                //                        else
-                //                        {
-                //                            File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                        }
-                //                    }
-                //                }
-                //                if (dovrdir.Name == "Libs")
-                //                {
-                //                    foreach (FileInfo file in dovrdir.GetFiles())
-                //                    {
-                //                        if (File.Exists(bsl + @"\Libs\" + file.Name))
-                //                        {
-                //                            File.Delete(bsl + @"\Libs\" + file.Name);
-                //                            File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
-                //                        }
-                //                        else
-                //                        {
-                //                            File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
-                //                        }
-                //                    }
-                //                }
-                //            }
-                //        }
-                //    }
-                //    if (dir.Name == "multiplayer")
-                //    {
-                //        DirectoryInfo multiplayerdi = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"Files\multiplayer");
-                //        foreach (DirectoryInfo multiplayerdir in multiplayerdi.GetDirectories())
-                //        {
-                //            if (multiplayerdir.Name == "Plugins")
-                //            {
-                //                foreach (FileInfo file in multiplayerdir.GetFiles())
-                //                {
-                //                    if (File.Exists(bsl + @"\Plugins\" + file.Name))
-                //                    {
-                //                        File.Delete(bsl + @"\Plugins\" + file.Name);
-                //                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                    }
-                //                    else
-                //                    {
-                //                        File.Move(file.FullName, bsl + @"\Plugins\" + file.Name);
-                //                    }
-                //                }
-                //            }
-                //            if (multiplayerdir.Name == "Libs")
-                //            {
-                //                foreach (FileInfo file in multiplayerdir.GetFiles())
-                //                {
-                //                    if (File.Exists(bsl + @"\Libs\" + file.Name))
-                //                    {
-                //                        File.Delete(bsl + @"\Libs\" + file.Name);
-                //                        File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
-                //                    }
-                //                    else
-                //                    {
-                //                        File.Move(file.FullName, bsl + @"\Libs\" + file.Name);
-                //                    }
-                //                }
-                //            }
-                //        }
-                //    }
-            }
-            //if (multiselected == "a")
-            //{
-            //    if (File.Exists(@"Files\CustomAvatar.dll"))
-            //    {
-            //        if (File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
-            //        {
-            //            File.Delete(bsl + @"\Plugins\CustomAvatar.dll");
-            //            File.Move(@"Files\CustomAvatar.dll", bsl + @"\Plugins\CustomAvatar.dll");
-            //        }
-            //        else
-            //        {
-            //            File.Move(@"Files\CustomAvatar.dll", bsl + @"\Plugins\CustomAvatar.dll");
-            //        }
-            //    }
-            //}
-
-            statuslabel.Text = "Status: Complete!";
-            progressBar1.Value = 100;
-            allowinstalluninstall = true;
-            currentlyinstallinguninstalling = false;
-            btnUninstall.BackColor = SystemColors.MenuHighlight;
-            btnInstall.BackColor = SystemColors.MenuHighlight;
-            DialogResult dialogResult = MessageBox.Show("Multiplayer is installed! Would you like to exit?", "Complete!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResult == DialogResult.Yes)
-            {
-                Application.Exit();
+                MessageBox.Show($"{SelectedMultiplayerMod.Name} v{SelectedMultiplayerMod.Version} failed to install: {ex.Message}.");
             }
         }
+
+
+        private void OnComponentProgressChanged(ComponentProgress progress)
+        {
+            pbComponent.Value = (int)(progress.Progress * 100);
+        }
+
+        private void OnOverallProgressChanged(OverallProgress progress)
+        {
+            if (progress.TotalStages <= 0)
+            {
+                statuslabel.Text = "";
+                pbOverall.Value = 0;
+
+            }
+            statuslabel.Text = $"Status: Downloading {progress.Component} {progress.Stage}/{progress.TotalStages}";
+            pbOverall.Value = (progress.Stage * 100) / progress.TotalStages;
+        }
+
 
         void UninstallMulti()
         {
             bool continuewithuninstall = false;
             statuslabel.Text = "Status: Preparing";
-            progressBar1.Value = 25;
+            pbOverall.Value = 25;
             allowinstalluninstall = false;
             currentlyinstallinguninstalling = true;
             btnUninstall.BackColor = SystemColors.GrayText;
             btnInstall.BackColor = SystemColors.GrayText;
             statuslabel.Text = "Status: Uninstalling Multiplayer";
-            progressBar1.Value = 50;
+            pbOverall.Value = 50;
             //if (multiselected == "a")
             //{
             //    if (File.Exists(bsl + @"\Plugins\BeatSaberMultiplayer.dll"))
@@ -578,67 +285,67 @@ namespace BSMulti_Installer2
             //    }
             //}
             statuslabel.Text = "Status: Uninstalling Dependencies";
-            progressBar1.Value = 75;
+            pbOverall.Value = 75;
             if (continuewithuninstall == true)
             {
                 if (chkSongCore.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\SongCore.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\SongCore.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\SongCore.dll");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\SongCore.dll");
                     }
                 }
                 if (chkBsml.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\BSML.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\BSML.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\BSML.dll");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\BSML.dll");
                     }
                 }
                 if (chkBsUtils.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\BS_Utils.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\BS_Utils.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\BS_Utils.dll");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\BS_Utils.dll");
                     }
                 }
                 if (chkCustomAvatars.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\CustomAvatar.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\CustomAvatar.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\CustomAvatar.dll");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\CustomAvatar.dll");
                     }
-                    Directory.Delete(bsl + @"\DynamicOpenVR", true);
+                    Directory.Delete(BeatSaberDirectory + @"\DynamicOpenVR", true);
                 }
                 if (chkDiscordCore.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\DiscordCore.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\DiscordCore.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\DiscordCore.dll");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\DiscordCore.dll");
                     }
-                    Directory.Delete(bsl + @"\Libs\Native", true);
+                    Directory.Delete(BeatSaberDirectory + @"\Libs\Native", true);
                 }
                 if (chkDynOVR.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\DynamicOpenVR.manifest"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\DynamicOpenVR.manifest"))
                     {
-                        File.Delete(bsl + @"\Plugins\DynamicOpenVR.manifest");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\DynamicOpenVR.manifest");
                     }
-                    if (File.Exists(bsl + @"\Libs\DynamicOpenVR.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Libs\DynamicOpenVR.dll"))
                     {
-                        File.Delete(bsl + @"\Libs\DynamicOpenVR.dll");
+                        File.Delete(BeatSaberDirectory + @"\Libs\DynamicOpenVR.dll");
                     }
                 }
                 if (chkScoreSaber.Checked == true)
                 {
-                    if (File.Exists(bsl + @"\Plugins\ScoreSaber.dll"))
+                    if (File.Exists(BeatSaberDirectory + @"\Plugins\ScoreSaber.dll"))
                     {
-                        File.Delete(bsl + @"\Plugins\ScoreSaber.dll");
+                        File.Delete(BeatSaberDirectory + @"\Plugins\ScoreSaber.dll");
                     }
                 }
             }
             statuslabel.Text = "Status: Complete!";
-            progressBar1.Value = 100;
+            pbOverall.Value = 100;
             allowinstalluninstall = true;
             currentlyinstallinguninstalling = false;
             btnUninstall.BackColor = SystemColors.MenuHighlight;
@@ -657,12 +364,12 @@ namespace BSMulti_Installer2
             this.Hide();
         }
 
-        private void btnInstall_Click(object sender, EventArgs e)
+        private async void btnInstall_Click(object sender, EventArgs e)
         {
             if (allowinstalluninstall)
             {
-                progressBar1.Value = 0;
-                InstallMulti();
+                pbOverall.Value = 0;
+                await InstallMulti();
             }
         }
 
@@ -670,7 +377,7 @@ namespace BSMulti_Installer2
         {
             if (allowinstalluninstall)
             {
-                progressBar1.Value = 0;
+                pbOverall.Value = 0;
                 UninstallMulti();
             }
         }

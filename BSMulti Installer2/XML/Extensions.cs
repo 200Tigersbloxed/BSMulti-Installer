@@ -8,6 +8,12 @@ namespace BSMulti_Installer2.XML
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Gets all the dependencies of a <see cref="MultiplayerMod"/>.
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="installer"></param>
+        /// <returns></returns>
         public static IEnumerable<MultiplayerComponent> GetComponents(this MultiplayerMod mod, MultiplayerInstallerConfiguration installer)
         {
             Dictionary<string, MultiplayerComponent> components = new Dictionary<string, MultiplayerComponent>();
@@ -31,6 +37,13 @@ namespace BSMulti_Installer2.XML
             }
             return components.Values.ToArray();
         }
+
+        /// <summary>
+        /// Gets all of the optional components of a <see cref="MultiplayerMod"/>.
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="installer"></param>
+        /// <returns></returns>
         public static IEnumerable<MultiplayerComponent> GetOptionalComponents(this MultiplayerMod mod, MultiplayerInstallerConfiguration installer)
         {
             Dictionary<string, MultiplayerComponent> components = new Dictionary<string, MultiplayerComponent>();
@@ -55,6 +68,12 @@ namespace BSMulti_Installer2.XML
             return components.Values.ToArray();
         }
 
+        /// <summary>
+        /// Gets all of the components of a <see cref="MultiplayerMod"/> and their dependencies.
+        /// </summary>
+        /// <param name="comp"></param>
+        /// <param name="installer"></param>
+        /// <returns></returns>
         public static IEnumerable<MultiplayerComponent> GetComponents(this MultiplayerComponent comp, MultiplayerInstallerConfiguration installer)
         {
             Dictionary<string, MultiplayerComponent> components = new Dictionary<string, MultiplayerComponent>();
@@ -78,6 +97,7 @@ namespace BSMulti_Installer2.XML
             }
             return components.Values.ToArray();
         }
+
         private static void GetComponents(this MultiplayerComponent comp, MultiplayerInstallerConfiguration installer, Dictionary<string, MultiplayerComponent> existing)
         {
             ComponentReference[] componentReferences = comp?.Requires;

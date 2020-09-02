@@ -102,13 +102,30 @@ namespace BSMulti_Installer2.XML
     public partial class MultiplayerMod
     {
 
+        public ComponentInstallation GetInstallation()
+        {
+            if (Installation == null)
+                Installation = new ComponentInstallation();
+            return Installation;
+        }
 
     }
 
 
     public partial class ComponentInstallation
     {
-
+        public IComponentInstaller GetInstaller()
+        {
+            if (Item is IComponentInstaller installer)
+                return installer;
+            else if (Item == null)
+            {
+                var inst = new ExtractTo();
+                Item = inst;
+                return inst;
+            }
+            throw new InvalidOperationException($"Installer is not recognized: {Item?.GetType().Name}");
+        }
     }
 
 
@@ -134,7 +151,7 @@ namespace BSMulti_Installer2.XML
             using (var fs = System.IO.File.OpenRead(source))
             using (var zip = new ZipArchive(fs, ZipArchiveMode.Read, false))
             {
-                if(File == null || File.Length == 0)
+                if (File == null || File.Length == 0)
                 {
                     zip.ExtractToDirectory(destinationDirectory, true);
                     return;
@@ -152,11 +169,11 @@ namespace BSMulti_Installer2.XML
 
     public partial class MultiplayerComponent
     {
-        public IComponentInstaller GetInstaller()
+        public ComponentInstallation GetInstallation()
         {
-            if (Installation?.Item is IComponentInstaller installer)
-                return installer;
-            else return new ExtractTo();
+            if (Installation == null)
+                Installation = new ComponentInstallation();
+            return Installation;
         }
 
         public override string ToString()

@@ -162,7 +162,7 @@ namespace BSMulti_Installer2
             if (allownext)
             {
                 InstallerWindow f2 = new InstallerWindow();
-                f2.bsl = bsl;
+                f2.BeatSaberDirectory = bsl;
                 f2.Show();
                 this.Hide();
             }

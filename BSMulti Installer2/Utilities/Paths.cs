@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,13 @@ namespace BSMulti_Installer2.Utilities
         public static readonly Uri URL_ConnectionCheck = new Uri("http://google.com/generate_204");
         public static readonly Uri URL_MultiplayerConfiguration = new Uri("https://raw.githubusercontent.com/Zingabopp/BSMulti-Installer/refactor/MultiplayerFiles.xml");
 
+        public static readonly string Path_Temp = Path.GetTempPath() + "BSMulti-Installer2";
         public const string Path_CachedConfig = "MultiplayerFiles.xml";
         public const string Path_Managed = @"Beat Saber_Data\Managed";
         public const string Path_Libs = "Libs";
         public const string Path_Plugins = "Plugins";
         public const string Path_PendingPlugins = @"IPA\Pending\Plugins";
+        public const string Path_Pending = @"IPA\Pending";
         public const string Path_IPA = "IPA";
     }
 }

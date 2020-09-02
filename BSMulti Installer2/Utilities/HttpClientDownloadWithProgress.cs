@@ -19,6 +19,8 @@ namespace BSMulti_Installer2.Utilities
 
         private HttpClient _httpClient;
         private bool disposedValue;
+        public bool AddExtensionToPath { get; set; } = true;
+        private string FileExtension { get; set; }
 
         public HttpClient WebClient
         {
@@ -64,12 +66,12 @@ namespace BSMulti_Installer2.Utilities
         /// <param name="cancellationToken"></param>
         /// <exception cref="OperationCanceledException"></exception>
         /// <returns></returns>
-        public async Task StartDownload(CancellationToken cancellationToken)
+        public async Task<string> StartDownload(CancellationToken cancellationToken)
         {
             //_httpClient = new HttpClient { Timeout = TimeSpan.FromDays(1) };
 
             using (var response = await _httpClient.GetAsync(_downloadUri, cancellationToken).ConfigureAwait(false))
-                await DownloadFileFromHttpResponseMessage(response, cancellationToken).ConfigureAwait(false);
+                return await DownloadFileFromHttpResponseMessage(response, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -79,14 +81,30 @@ namespace BSMulti_Installer2.Utilities
         /// <param name="cancellationToken"></param>
         /// <exception cref="OperationCanceledException"></exception>
         /// <returns></returns>
-        private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<string> DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken cancellationToken)
         {
             response.EnsureSuccessStatusCode();
 
             var totalBytes = response.Content.Headers?.ContentLength ?? 0;
-
+            if (AddExtensionToPath)
+            {
+                string requestUrl = response.RequestMessage.RequestUri.ToString();
+                if (requestUrl.EndsWith("dll", StringComparison.OrdinalIgnoreCase))
+                    FileExtension = "dll";
+                else if (requestUrl.EndsWith("zip", StringComparison.OrdinalIgnoreCase))
+                    FileExtension = "zip";
+                else
+                {
+                    string mediaType = response.Content.Headers?.ContentType.MediaType;
+                    int startIndex = mediaType.LastIndexOf('/');
+                    if (startIndex > 0)
+                        FileExtension = mediaType.Substring(startIndex + 1);
+                    if (FileExtension == "x-msdos-program")
+                        FileExtension = "dll";
+                }
+            }
             using (var contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                await ProcessContentStream(totalBytes, contentStream, cancellationToken).ConfigureAwait(false);
+                return await ProcessContentStream(totalBytes, contentStream, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -97,16 +115,19 @@ namespace BSMulti_Installer2.Utilities
         /// <param name="cancellationToken"></param>
         /// <exception cref="OperationCanceledException"></exception>
         /// <returns></returns>
-        private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream, CancellationToken cancellationToken)
+        private async Task<string> ProcessContentStream(long? totalDownloadSize, Stream contentStream, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var totalBytesRead = 0L;
             var readCount = 0L;
             var buffer = new byte[8192];
             var isMoreToRead = true;
-            var file = new FileInfo(_destinationFilePath);
+            string destination = _destinationFilePath;
+            if (AddExtensionToPath && !string.IsNullOrEmpty(FileExtension))
+                destination = _destinationFilePath + "." + FileExtension;
+            var file = new FileInfo(destination);
             file.Directory.Create();
-            using (var fileStream = new FileStream(_destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
+            using (var fileStream = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
             {
                 do
                 {
@@ -128,6 +149,7 @@ namespace BSMulti_Installer2.Utilities
                 }
                 while (isMoreToRead);
             }
+            return destination;
         }
 
         private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
@@ -137,7 +159,7 @@ namespace BSMulti_Installer2.Utilities
 
             double? progressPercentage = null;
             if (totalDownloadSize.HasValue)
-                progressPercentage = Math.Round((double)totalBytesRead / totalDownloadSize.Value * 100, 2);
+                progressPercentage = Math.Round((double)totalBytesRead / (double)totalDownloadSize.Value, 4);
 
             ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
         }
