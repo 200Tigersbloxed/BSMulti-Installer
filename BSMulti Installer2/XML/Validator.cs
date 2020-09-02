@@ -10,7 +10,7 @@ namespace BSMulti_Installer2.XML
     {
         public static void ValidateXML(MultiplayerInstaller installer)
         {
-            foreach (MultiplayerComponent component in installer.ComponentDefinitions.Component)
+            foreach (MultiplayerComponent component in installer.ComponentDefinitions)
             {
                 ValidateDependencies(installer, component);
             }
