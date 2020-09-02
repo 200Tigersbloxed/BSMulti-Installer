@@ -43,7 +43,7 @@
         <Description>A modified version of CustomAvatars to support Multiplayer.</Description>
       </Metadata>
       <Installation>
-        <MoveTo Filename="CustomAvatar.dll">Plugins</MoveTo>
+        <MoveTo Destination="Plugins\CustomAvatar.dll" />
         <Files>
           <File Path="Plugins\CustomAvatar.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8CF" RequireHashMatch="true" />
         </Files>
