@@ -8,16 +8,16 @@ using System.Xml.Serialization;
 
 namespace BSMulti_Installer2.XML
 {
-    public partial class MultiplayerInstaller
+    public partial class MultiplayerInstallerConfiguration
     {
-        public static MultiplayerInstaller Deserialize(Stream xmlStream)
+        public static MultiplayerInstallerConfiguration Deserialize(Stream xmlStream)
         {
-            var serializer = new XmlSerializer(typeof(MultiplayerInstaller));
-            MultiplayerInstaller installerDef = (MultiplayerInstaller)serializer.Deserialize(xmlStream);
+            var serializer = new XmlSerializer(typeof(MultiplayerInstallerConfiguration));
+            MultiplayerInstallerConfiguration installerDef = (MultiplayerInstallerConfiguration)serializer.Deserialize(xmlStream);
             installerDef.OnDeserialized();
             return installerDef;
         }
-        public static MultiplayerInstaller Deserialize(string filePath)
+        public static MultiplayerInstallerConfiguration Deserialize(string filePath)
         {
             using (var reader = File.OpenRead(filePath))
             {
@@ -122,7 +122,7 @@ namespace BSMulti_Installer2.XML
     {
         public override string ToString()
         {
-            return MultiplayerInstaller.GetComponentString(Name, Version);
+            return MultiplayerInstallerConfiguration.GetComponentString(Name, Version);
         }
     }
 
@@ -130,7 +130,7 @@ namespace BSMulti_Installer2.XML
     {
         public override string ToString()
         {
-            return MultiplayerInstaller.GetComponentString(Name, Version);
+            return MultiplayerInstallerConfiguration.GetComponentString(Name, Version);
         }
     }
 

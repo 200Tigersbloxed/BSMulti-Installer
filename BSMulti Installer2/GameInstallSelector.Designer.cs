@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameInstallSelector));
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlTitleBar = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.closeForm1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -48,20 +48,20 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
+            this.pnlTitleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlTitleBar
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.closeForm1);
-            this.panel1.Location = new System.Drawing.Point(-4, -3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(402, 36);
-            this.panel1.TabIndex = 0;
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.pnlTitleBar.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.pnlTitleBar.Controls.Add(this.label1);
+            this.pnlTitleBar.Controls.Add(this.closeForm1);
+            this.pnlTitleBar.Location = new System.Drawing.Point(-4, -3);
+            this.pnlTitleBar.Name = "pnlTitleBar";
+            this.pnlTitleBar.Size = new System.Drawing.Size(402, 36);
+            this.pnlTitleBar.TabIndex = 0;
+            this.pnlTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlTitleBar_MouseDown);
             // 
             // label1
             // 
@@ -232,9 +232,9 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::BSMulti_Installer2.Properties.Resources.cross;
-            this.pictureBox1.Location = new System.Drawing.Point(309, 62);
+            this.pictureBox1.Location = new System.Drawing.Point(99, 47);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(69, 69);
+            this.pictureBox1.Size = new System.Drawing.Size(40, 40);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
@@ -273,7 +273,7 @@
             this.label9.TabIndex = 31;
             this.label9.Text = "MultiplayerLite Version:";
             // 
-            // Form1
+            // GameInstallSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -294,15 +294,15 @@
             this.Controls.Add(this.btnFindSteam);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlTitleBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.Name = "GameInstallSelector";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BeatSaber Multiplayer Installer v2";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlTitleBar.ResumeLayout(false);
+            this.pnlTitleBar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -311,7 +311,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlTitleBar;
         private System.Windows.Forms.Button closeForm1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

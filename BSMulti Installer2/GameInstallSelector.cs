@@ -14,6 +14,8 @@ using System.Management;
 using System.Net;
 using Newtonsoft.Json;
 using BSMulti_Installer2.Utilities;
+using static BSMulti_Installer2.Utilities.WebUtils;
+using System.Reflection;
 
 namespace BSMulti_Installer2
 {
@@ -39,11 +41,10 @@ namespace BSMulti_Installer2
 
         public bool userownssteam = false;
         public bool userownsoculus = false;
-        string steaminstallpath = "";
-        string oculusinstallpath = "";
         public string bsl;
         public bool allownext = false;
-        public string version = "v2.0.5";
+        public Version AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        public string Version => $"{AppVersion.Major}.{AppVersion.Minor}.{AppVersion.Build}";
 
         public GameInstallSelector()
         {
@@ -51,43 +52,55 @@ namespace BSMulti_Installer2
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             // check for internet
-            if (CheckForInternetConnection() == true) { }
-            else
+            if (await CheckForInternetConnection() != true)
             {
                 MessageBox.Show("An Internet Connection is required!", "Not Connected to Internet", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
             // check if user can access website
-            if (CheckForWebsiteConnection() == true) { }
-            else
+            if (await CheckForWebsiteConnection() != true)
             {
-                MessageBox.Show("Failed to connect to https://tigersserver.xyz. Please try again soon.", "Failed to Connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Failed to connect to {Paths.URL_TigerServer}. Please try again soon.", "Failed to Connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
-
-            WebClient client = new WebClient();
-            Stream stream = client.OpenRead("https://pastebin.com/raw/S8v9a7Ba");
-            StreamReader reader = new StreamReader(stream);
-            String content = reader.ReadToEnd();
-            if(version != content)
+            bool versionSuccess = false;
+            Exception versionException = null;
+            try
             {
-                DialogResult drUpdate = MessageBox.Show("BSMulti-Installer is not up to date! Would you like to download the newest version?", "Uh Oh!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if(drUpdate == DialogResult.Yes)
+                var latestVersion = await VersionCheck.GetLatestVersionAsync(Paths.URL_ReleaseAPIPage);
+                if (latestVersion.IsSet)
                 {
-                    System.Diagnostics.Process.Start("https://github.com/200Tigersbloxed/BSMulti-Installer/releases/latest");
-                    Application.Exit();
+                    versionSuccess = true;
+                    if (Utilities.Utilities.CompareVersions(AppVersion, latestVersion.GetVersionArray()) > 0)
+                    {
+                        DialogResult drUpdate = MessageBox.Show("BSMulti-Installer is not up to date! Would you like to download the newest version?", "Uh Oh!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (drUpdate == DialogResult.Yes)
+                        {
+                            System.Diagnostics.Process.Start(Paths.URL_ReleasePage.AbsoluteUri);
+                            Application.Exit();
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                versionException = ex;
+            }
+            if (!versionSuccess)
+            {
+                MessageBox.Show($"Error checking for latest BSMulti-Installer version: {versionException.Message ?? "No exception was thrown."}");
+            }
+
 
             checkForMessage();
-            
+
             Directory.CreateDirectory("Files");
         }
 
-        private void panel1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void pnlTitleBar_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -106,17 +119,18 @@ namespace BSMulti_Installer2
             // Find the Steam folder
             var installs = BeatSaberTools.GetSteamBeatSaberInstalls();
 
-            if(installs == null || installs.Length == 0)
+            if (installs == null || installs.Length == 0)
             {
                 MessageBox.Show("Uh Oh!", "A Steam store install of Beat Saber could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else{
+            else
+            {
                 bsl = installs.First().InstallPath;
-                if(Directory.Exists(bsl))
+                if (Directory.Exists(bsl))
                 {
-                    if(File.Exists(bsl + @"\Beat Saber.exe"))
+                    if (File.Exists(bsl + @"\Beat Saber.exe"))
                     {
-                        if(File.Exists(bsl + @"\IPA.exe"))
+                        if (File.Exists(bsl + @"\IPA.exe"))
                         {
                             textBox1.Text = bsl;
                             pictureBox1.Image = BSMulti_Installer2.Properties.Resources.tick;
@@ -249,7 +263,7 @@ namespace BSMulti_Installer2
                 MessageBox.Show("Please run the installer as administrator to continue! (Beat Saber Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
-            if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Files"))
+            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Files"))
             {
                 if (verifyPermissions(AppDomain.CurrentDomain.BaseDirectory + @"\Files")) { }
                 else
@@ -275,10 +289,11 @@ namespace BSMulti_Installer2
             string mj;
             string mlj;
             // check for the json data
-            if(File.Exists(bsl + @"/UserData/BeatSaberMultiplayer.json"))
+            if (File.Exists(bsl + @"/UserData/BeatSaberMultiplayer.json"))
             {
                 mj = bsl + @"/UserData/BeatSaberMultiplayer.json";
-                if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayer.dll")) {
+                if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayer.dll"))
+                {
                     // multiplayer is installed
                     string json = System.IO.File.ReadAllText(mj);
                     dynamic bsmj = JsonConvert.DeserializeObject(json);
@@ -318,27 +333,33 @@ namespace BSMulti_Installer2
                 label9.Text = "MultiplayerLite Version: Not Installed";
             }
         }
-
-        void checkForMessage()
+        private static bool DevMessageShown = false;
+        private async void checkForMessage()
         {
-            WebClient client = new WebClient();
-            Stream stream = client.OpenRead("https://pastebin.com/raw/vaXRephy");
-            StreamReader reader = new StreamReader(stream);
-            String content = reader.ReadToEnd();
-            string[] splitcontent = content.Split('|');
-            if(splitcontent[0] == "Y")
+            if (DevMessageShown) return;
+            try
             {
-                MessageBox.Show(splitcontent[1], "Message From Developer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var response = await HttpClient.GetAsync(Paths.URL_DeveloperMessage);
+                string content = await response.Content.ReadAsStringAsync();
+                string[] splitcontent = content.Split('|');
+                if (splitcontent[0] == "Y")
+                {
+                    MessageBox.Show(splitcontent[1], "Message From Developer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                DevMessageShown = true;
+            }
+            catch
+            {
+
             }
         }
 
-        public static bool CheckForInternetConnection()
+        public static async Task<bool> CheckForInternetConnection()
         {
             try
             {
-                using (var client = new WebClient())
-                using (client.OpenRead("http://google.com/generate_204"))
-                    return true;
+                var response = await HttpClient.GetAsync(Paths.URL_ConnectionCheck).ConfigureAwait(false);
+                return response.IsSuccessStatusCode;
             }
             catch
             {
@@ -346,13 +367,12 @@ namespace BSMulti_Installer2
             }
         }
 
-        public static bool CheckForWebsiteConnection()
+        public static async Task<bool> CheckForWebsiteConnection()
         {
             try
             {
-                using (var client = new WebClient())
-                using (client.OpenRead("https://tigersserver.xyz"))
-                    return true;
+                var response = await HttpClient.GetAsync(Paths.URL_TigerServer).ConfigureAwait(false);
+                return response.IsSuccessStatusCode;
             }
             catch
             {
@@ -362,7 +382,7 @@ namespace BSMulti_Installer2
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/200Tigersbloxed/BSMulti-Installer/blob/master/README.md");
+            System.Diagnostics.Process.Start(Paths.URL_ReadmePage.AbsoluteUri);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace BSMulti_Installer2.XML
 {
     public static class Extensions
     {
-        public static IEnumerable<MultiplayerComponent> GetComponents(this MultiplayerMod mod, MultiplayerInstaller installer)
+        public static IEnumerable<MultiplayerComponent> GetComponents(this MultiplayerMod mod, MultiplayerInstallerConfiguration installer)
         {
             Dictionary<string, MultiplayerComponent> components = new Dictionary<string, MultiplayerComponent>();
             var compAry = mod.Dependencies;
@@ -17,7 +17,7 @@ namespace BSMulti_Installer2.XML
             for(int i = 0; i < compAry.Length; i++)
             {
                 ComponentReference c = compAry[i];
-                string cId = MultiplayerInstaller.GetComponentString(c);
+                string cId = MultiplayerInstallerConfiguration.GetComponentString(c);
                 if (!components.ContainsKey(cId))
                 {
                     if (installer.TryGetComponent(c, out MultiplayerComponent mpComp))
@@ -31,7 +31,7 @@ namespace BSMulti_Installer2.XML
             }
             return components.Values.ToArray();
         }
-        public static IEnumerable<MultiplayerComponent> GetOptionalComponents(this MultiplayerMod mod, MultiplayerInstaller installer)
+        public static IEnumerable<MultiplayerComponent> GetOptionalComponents(this MultiplayerMod mod, MultiplayerInstallerConfiguration installer)
         {
             Dictionary<string, MultiplayerComponent> components = new Dictionary<string, MultiplayerComponent>();
             var compAry = mod.OptionalComponents;
@@ -40,7 +40,7 @@ namespace BSMulti_Installer2.XML
             for (int i = 0; i < compAry.Length; i++)
             {
                 ComponentReference c = compAry[i];
-                string cId = MultiplayerInstaller.GetComponentString(c);
+                string cId = MultiplayerInstallerConfiguration.GetComponentString(c);
                 if (!components.ContainsKey(cId))
                 {
                     if (installer.TryGetComponent(c, out MultiplayerComponent mpComp))
@@ -55,7 +55,7 @@ namespace BSMulti_Installer2.XML
             return components.Values.ToArray();
         }
 
-        public static IEnumerable<MultiplayerComponent> GetComponents(this MultiplayerComponent comp, MultiplayerInstaller installer)
+        public static IEnumerable<MultiplayerComponent> GetComponents(this MultiplayerComponent comp, MultiplayerInstallerConfiguration installer)
         {
             Dictionary<string, MultiplayerComponent> components = new Dictionary<string, MultiplayerComponent>();
             ComponentReference[] componentReferences = comp?.Requires;
@@ -64,7 +64,7 @@ namespace BSMulti_Installer2.XML
             for (int i = 0; i < componentReferences.Length; i++)
             {
                 ComponentReference c = componentReferences[i];
-                string cId = MultiplayerInstaller.GetComponentString(c);
+                string cId = MultiplayerInstallerConfiguration.GetComponentString(c);
                 if (!components.ContainsKey(cId))
                 {
                     if (installer.TryGetComponent(c, out MultiplayerComponent mpComp))
@@ -78,7 +78,7 @@ namespace BSMulti_Installer2.XML
             }
             return components.Values.ToArray();
         }
-        private static void GetComponents(this MultiplayerComponent comp, MultiplayerInstaller installer, Dictionary<string, MultiplayerComponent> existing)
+        private static void GetComponents(this MultiplayerComponent comp, MultiplayerInstallerConfiguration installer, Dictionary<string, MultiplayerComponent> existing)
         {
             ComponentReference[] componentReferences = comp?.Requires;
             if (componentReferences == null || componentReferences.Length == 0) 
@@ -86,7 +86,7 @@ namespace BSMulti_Installer2.XML
             for(int i = 0; i < componentReferences.Length; i++)
             {
                 ComponentReference c = componentReferences[i];
-                string cId = MultiplayerInstaller.GetComponentString(c);
+                string cId = MultiplayerInstallerConfiguration.GetComponentString(c);
                 if (!existing.ContainsKey(cId))
                 {
                     if (installer.TryGetComponent(c, out MultiplayerComponent mpComp))

@@ -22,7 +22,7 @@ namespace BSMulti_Installer2.XML {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.w3.org/BSMultiInstaller")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="http://www.w3.org/BSMultiInstaller", IsNullable=false)]
-    public partial class MultiplayerInstaller {
+    public partial class MultiplayerInstallerConfiguration {
         
         private MultiplayerMod[] modGroupField;
         

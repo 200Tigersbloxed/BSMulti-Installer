@@ -18,7 +18,7 @@ namespace BSMulti_Installer2
         /// </summary>
         /// <param name="beatSaberPath"></param>
         /// <returns></returns>
-        public virtual async Task<bool> Install(string beatSaberPath)
+        public virtual Task<bool> Install(string beatSaberPath)
         {
             throw new NotImplementedException();
         }

@@ -8,7 +8,7 @@ namespace BSMulti_Installer2.XML
 {
     public static class Validator
     {
-        public static void ValidateXML(MultiplayerInstaller installer)
+        public static void ValidateXML(MultiplayerInstallerConfiguration installer)
         {
             foreach (MultiplayerComponent component in installer.ComponentDefinitions)
             {
@@ -20,7 +20,7 @@ namespace BSMulti_Installer2.XML
             }
         }
 
-        public static void ValidateMod(MultiplayerInstaller installer, MultiplayerMod mod)
+        public static void ValidateMod(MultiplayerInstallerConfiguration installer, MultiplayerMod mod)
         {
             ComponentReference[] deps = mod.Dependencies;
             if (deps == null) return;
@@ -35,16 +35,16 @@ namespace BSMulti_Installer2.XML
             }
         }
 
-        internal static void ValidateDependencies(MultiplayerInstaller installer, MultiplayerComponent component, Dictionary<string, MultiplayerComponent> existing)
+        internal static void ValidateDependencies(MultiplayerInstallerConfiguration installer, MultiplayerComponent component, Dictionary<string, MultiplayerComponent> existing)
         {
             if (component == null) throw new ArgumentNullException("Component cannot be null.");
-            existing.Add(MultiplayerInstaller.GetComponentString(component), component);
+            existing.Add(MultiplayerInstallerConfiguration.GetComponentString(component), component);
             var componentReferences = component.Requires;
             if (componentReferences == null || componentReferences.Length == 0)
                 return;
             foreach (var dependency in componentReferences)
             {
-                if (existing.TryGetValue(MultiplayerInstaller.GetComponentString(dependency), out _))
+                if (existing.TryGetValue(MultiplayerInstallerConfiguration.GetComponentString(dependency), out _))
                 {
                     throw new CircularDependencyException($"Circular dependency detected: {string.Join(" => ", existing.Values.Select(c => c.ToString()).Concat(new string[] { dependency.ToString() }))}");
                 }
@@ -57,7 +57,7 @@ namespace BSMulti_Installer2.XML
             }
         }
 
-        public static void ValidateDependencies(MultiplayerInstaller installer, MultiplayerComponent component)
+        public static void ValidateDependencies(MultiplayerInstallerConfiguration installer, MultiplayerComponent component)
         {
             if (component == null) throw new ArgumentNullException("Component cannot be null.");
             var componentReferences = component.Requires;
