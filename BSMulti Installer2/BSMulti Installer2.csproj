@@ -71,6 +71,9 @@
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="MultiplayerComponent.cs" />
+    <Compile Include="Utilities\BeatSaberInstall.cs" />
+    <Compile Include="Utilities\BeatSaberTools.cs" />
+    <Compile Include="Utilities\Paths.cs" />
     <Compile Include="XML\Extensions.cs" />
     <Compile Include="XML\MultiplayerFiles.cs" />
     <Compile Include="Program.cs" />

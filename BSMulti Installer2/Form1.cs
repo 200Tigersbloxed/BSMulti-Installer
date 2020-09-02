@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Management;
 using System.Net;
 using Newtonsoft.Json;
+using BSMulti_Installer2.Utilities;
 
 namespace BSMulti_Installer2
 {
@@ -100,35 +101,17 @@ namespace BSMulti_Installer2
             Application.Exit();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnFindSteam_Click(object sender, EventArgs e)
         {
             // Find the Steam folder
-            RegistryKey rk1s = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-            if (rk1s != null)
-            {
-                RegistryKey rk2 = rk1s.OpenSubKey("Software");
-                if (rk2 != null)
-                {
-                    RegistryKey rk3 = rk2.OpenSubKey("Valve");
-                    if (rk3 != null)
-                    {
-                        RegistryKey rk4 = rk3.OpenSubKey("Steam");
-                        if (rk4 != null)
-                        {
-                            userownssteam = true;
-                            string phrase = rk4.GetValue("SteamPath").ToString();
-                            steaminstallpath = phrase;
-                        }
-                    }
-                }
-            }
+            var installs = BeatSaberTools.GetSteamBeatSaberInstalls();
 
-            if(userownssteam == false)
+            if(installs == null || installs.Length == 0)
             {
-                MessageBox.Show("Uh Oh!", "Steam Could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Uh Oh!", "A Steam store install of Beat Saber could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else{
-                bsl = steaminstallpath + @"/steamapps/common/Beat Saber";
+                bsl = installs.First().InstallPath;
                 if(Directory.Exists(bsl))
                 {
                     if(File.Exists(bsl + @"\Beat Saber.exe"))
@@ -171,44 +154,18 @@ namespace BSMulti_Installer2
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnFindOculus_Click(object sender, EventArgs e)
         {
             //Find the Oculus Folder
-            RegistryKey rk1s = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-            if (rk1s != null)
-            {
-                RegistryKey rk2 = rk1s.OpenSubKey("Software");
-                if (rk2 != null)
-                {
-                    RegistryKey rk3 = rk2.OpenSubKey("WOW6432Node");
-                    if (rk3 != null)
-                    {
-                        RegistryKey rk4 = rk3.OpenSubKey("Oculus VR, LLC");
-                        if (rk4 != null)
-                        {
-                            RegistryKey rk5 = rk4.OpenSubKey("Oculus");
-                            if(rk5 != null)
-                            {
-                                RegistryKey rk6 = rk5.OpenSubKey("Config");
-                                if(rk6 != null)
-                                {
-                                    userownsoculus = true;
-                                    string phrase = rk6.GetValue("InitialAppLibrary").ToString();
-                                    oculusinstallpath = phrase;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            var installs = BeatSaberTools.GetOculusBeatSaberInstalls();
 
-            if (userownsoculus == false)
+            if (installs == null || installs.Length == 0)
             {
-                MessageBox.Show("Oculus Could not be found!", "Uh Oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Uh Oh!", "An Oculus store install of Beat Saber could not be found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                bsl = oculusinstallpath + @"/Software/Software/hyperbolic-magnetism-beat-saber";
+                bsl = installs.First().InstallPath;
                 if (Directory.Exists(bsl))
                 {
                     if (File.Exists(bsl + @"\Beat Saber.exe"))
