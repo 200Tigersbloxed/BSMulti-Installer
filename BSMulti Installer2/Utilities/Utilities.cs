@@ -164,5 +164,16 @@ namespace BSMulti_Installer2.Utilities
                     file.ExtractToFile(completeFileName, true);
             }
         }
+
+        public static bool TryDelete(string filePath)
+        {
+            try
+            {
+                File.Delete(filePath);
+                return true;
+            }
+            catch { }
+            return false;
+        }
     }
 }

@@ -121,7 +121,7 @@ namespace BSMulti_Installer2
 
         private void SetButtonEnabled(Button button, bool enabled, bool highlighted = false)
         {
-            button.BackColor = enabled ? (highlighted ? Color.Green : SystemColors.MenuHighlight) : SystemColors.GrayText;
+            button.BackColor = highlighted ? Color.Green : (enabled ? SystemColors.MenuHighlight : SystemColors.GrayText) ;
             button.Enabled = enabled;
         }
 
@@ -179,10 +179,30 @@ namespace BSMulti_Installer2
             }
         }
 
+        public bool TryDeleteMod(string gameDir, string fileName)
+        {
+            string modFile = Path.Combine(gameDir, Paths.Path_Plugins, fileName);
+            bool success = true;
+            if (File.Exists(modFile))
+            {
+                success = Utilities.Utilities.TryDelete(modFile);
+            }
+            modFile = Path.Combine(gameDir, Paths.Path_PendingPlugins, fileName);
+            if (File.Exists(modFile))
+            {
+                success = success && Utilities.Utilities.TryDelete(modFile);
+            }
+            return success;
+        }
+
         private async Task InstallMulti()
         {
             try
             {
+                SetButtonEnabled(btnInstall, false);
+                SetButtonEnabled(btnUninstall, false);
+                SetButtonEnabled(btnSelectAndruzz, false, SelectedMultiplayerMod?.Name == "Multiplayer");
+                SetButtonEnabled(btnSelectZinga, false, SelectedMultiplayerMod?.Name == "MultiplayerLite");
                 statuslabel.Text = "Status: Preparing";
                 pbOverall.Value = 0;
                 pbComponent.Value = 0;
@@ -193,6 +213,20 @@ namespace BSMulti_Installer2
                 Progress<ComponentProgress> componentProgress = new Progress<ComponentProgress>(OnComponentProgressChanged);
                 string outputDir = BeatSaberDirectory;
                 Directory.CreateDirectory(outputDir);
+                foreach (var mod in InstallerConfig.ModGroup)
+                {
+                    if(mod != SelectedMultiplayerMod)
+                    {
+                        if(mod.Name == "Multiplayer")
+                        {
+                            TryDeleteMod(outputDir, "BeatSaberMultiplayer.dll");
+                        }
+                        if(mod.Name == "MultiplayerLite")
+                        {
+                            TryDeleteMod(outputDir, "BeatSaberMultiplayerLite.dll");
+                        }
+                    }
+                }
                 Installer installer = new Installer(outputDir, InstallerConfig, SelectedMultiplayerMod, SelectedMultiplayerMod.GetOptionalComponents(InstallerConfig), true);
                 installer.EnsureValidInstaller();
                 await installer.InstallMod(overallProgress, componentProgress);
@@ -200,10 +234,7 @@ namespace BSMulti_Installer2
                 statuslabel.Text = "Status: Complete!";
                 pbOverall.Value = 100;
                 await Task.Delay(1000);
-                allowinstalluninstall = true;
-                currentlyinstallinguninstalling = false;
-                btnUninstall.BackColor = SystemColors.MenuHighlight;
-                btnInstall.BackColor = SystemColors.MenuHighlight;
+                
 
                 DialogResult dialogResult = MessageBox.Show($"{SelectedMultiplayerMod.Name} v{SelectedMultiplayerMod.Version} is installed! Would you like to exit?", "Complete!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
@@ -213,6 +244,15 @@ namespace BSMulti_Installer2
             }catch(Exception ex)
             {
                 MessageBox.Show($"{SelectedMultiplayerMod.Name} v{SelectedMultiplayerMod.Version} failed to install: {ex.Message}.");
+            }
+            finally
+            {
+                allowinstalluninstall = true;
+                currentlyinstallinguninstalling = false;
+                SetButtonEnabled(btnInstall, SelectedMultiplayerMod != null);
+                SetButtonEnabled(btnUninstall, SelectedMultiplayerMod != null);
+                SetButtonEnabled(btnSelectAndruzz, AndruzzMod != null, SelectedMultiplayerMod?.Name == "Multiplayer");
+                SetButtonEnabled(btnSelectZinga, ZingaMod != null, SelectedMultiplayerMod?.Name == "MultiplayerLite");
             }
         }
 
