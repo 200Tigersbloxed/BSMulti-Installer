@@ -46,6 +46,8 @@ jobs:
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
+    - name: Build the application
+      run: msbuild $env:Solution_Name -t:"BSMulti Installer2" /p:Configuration=${{ matrix.configuration }}
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
