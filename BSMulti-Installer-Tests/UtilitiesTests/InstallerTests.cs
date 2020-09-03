@@ -17,7 +17,11 @@ namespace BSMulti_Installer_Tests.UtilitiesTests
         [TestMethod]
         public async Task InstallAndruzz()
         {
-            var config = Utilities.GetInstallerConfigFromFile(@"Data\MultiplayerFilesTest.xml");
+#if NCRUNCH
+            var config = Utilities.GetInstallerConfigFromFile(Path.Combine("Data", "MultiplayerFilesTest.xml"));
+#else
+            var config = Utilities.GetInstallerConfigFromFile(Path.GetFullPath(@"..\..\..\..\MultiplayerFiles.xml"));
+#endif
             var mod = config.ModGroup.First(m => m.Name == "Multiplayer");
             string outputDir = Path.Combine(OutputDir, "Andruzz");
             Directory.CreateDirectory(outputDir);
@@ -31,7 +35,11 @@ namespace BSMulti_Installer_Tests.UtilitiesTests
         [TestMethod]
         public async Task InstallZinga()
         {
-            var config = Utilities.GetInstallerConfigFromFile(@"Data\MultiplayerFilesTest.xml");
+#if NCRUNCH
+            var config = Utilities.GetInstallerConfigFromFile(Path.Combine("Data", "MultiplayerFilesTest.xml"));
+#else
+            var config = Utilities.GetInstallerConfigFromFile(Path.GetFullPath(@"..\..\..\..\MultiplayerFiles.xml"));
+#endif
             var mod = config.ModGroup.First(m => m.Name == "MultiplayerLite");
             string outputDir = Path.Combine(OutputDir, "Zinga");
             Directory.CreateDirectory(outputDir);
