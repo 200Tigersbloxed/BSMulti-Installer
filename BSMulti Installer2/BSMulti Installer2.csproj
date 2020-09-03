@@ -127,4 +127,7 @@
     <Content Include="bsmilogo_mVX_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(SolutionDir)MultiplayerFiles.xml" "$(ProjectDir)$(OutDir)MultiplayerFiles.xml"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
