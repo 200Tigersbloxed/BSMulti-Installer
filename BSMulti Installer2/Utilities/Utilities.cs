@@ -49,6 +49,7 @@ namespace BSMulti_Installer2.Utilities
                 return 1;
             return 0;
         }
+
         /// <summary>
         /// Compares left to right. Returns -1 if right is less than left. Returns 1 if right is greater than left.
         /// </summary>
@@ -58,6 +59,7 @@ namespace BSMulti_Installer2.Utilities
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         public static int CompareVersions(string left, int[] right) => CompareVersions(GetVersionArray(left), right);
+
         /// <summary>
         /// Compares left to right. Returns -1 if right is less than left. Returns 1 if right is greater than left.
         /// </summary>
@@ -68,6 +70,11 @@ namespace BSMulti_Installer2.Utilities
         /// <exception cref="ArgumentException"></exception>
         public static int CompareVersions(Version left, int[] right) => CompareVersions(new int[] { left.Major, left.Minor, left.Build, left.Revision }, right);
 
+        /// <summary>
+        /// Parses a version string into an array of <see cref="int"/>. Returns null if the string is invalid.
+        /// </summary>
+        /// <param name="versionText"></param>
+        /// <returns></returns>
         public static int[] GetVersionArray(string versionText)
         {
             var match = VersionRegex.Match(versionText);
@@ -89,6 +96,11 @@ namespace BSMulti_Installer2.Utilities
                 return null;
         }
 
+        /// <summary>
+        /// Creates a SHA1 hash from an input stream.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static string CreateSha1(Stream input)
         {
             using (SHA1 sha1 = SHA1.Create())
@@ -99,6 +111,11 @@ namespace BSMulti_Installer2.Utilities
             }
         }
 
+        /// <summary>
+        /// Retrieves and deserializes a <see cref="MultiplayerInstallerConfiguration"/> XML file from a web URI.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
         public static async Task<MultiplayerInstallerConfiguration> GetInstallerConfigFromWeb(Uri uri)
         {
             var response = await WebUtils.HttpClient.GetAsync(uri).ConfigureAwait(false);
@@ -108,6 +125,12 @@ namespace BSMulti_Installer2.Utilities
                 return MultiplayerInstallerConfiguration.Deserialize(await response.Content.ReadAsStreamAsync().ConfigureAwait(false));
             }
         }
+
+        /// <summary>
+        /// Retrieves and deserializes a <see cref="MultiplayerInstallerConfiguration"/> XML file from a file path.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
         public static MultiplayerInstallerConfiguration GetInstallerConfigFromFile(string path)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
@@ -118,6 +141,12 @@ namespace BSMulti_Installer2.Utilities
             }
         }
 
+        /// <summary>
+        /// Extracts the contents of a <see cref="ZipArchive"/> to a directory with an option to overwrite existing files.
+        /// </summary>
+        /// <param name="archive"></param>
+        /// <param name="destinationDirectoryName"></param>
+        /// <param name="overwrite"></param>
         public static void ExtractToDirectory(this ZipArchive archive, string destinationDirectoryName, bool overwrite)
         {
             if (!overwrite)
@@ -135,197 +164,5 @@ namespace BSMulti_Installer2.Utilities
                     file.ExtractToFile(completeFileName, true);
             }
         }
-
-        public static ZipExtractResult ExtractZip(string zipPath, string extractDirectory, bool overwriteTarget = true)
-        {
-            if (string.IsNullOrEmpty(zipPath))
-                throw new ArgumentNullException(nameof(zipPath));
-            FileInfo zipFile = new FileInfo(zipPath);
-            if (!zipFile.Exists)
-                throw new ArgumentException($"File at zipPath {zipFile.FullName} does not exist.", nameof(zipPath));
-            using (FileStream fs = zipFile.OpenRead())
-            {
-                return ExtractZip(fs, extractDirectory, overwriteTarget);
-            }
-        }
-
-        /// <summary>
-        /// Extracts a zip file to the specified directory. If an exception is thrown during extraction, it is stored in ZipExtractResult.
-        /// </summary>
-        /// <param name="zipPath">Path to zip file</param>
-        /// <param name="extractDirectory">Directory to extract to</param>
-        /// <param name="deleteZip">If true, deletes zip file after extraction</param>
-        /// <param name="overwriteTarget">If true, overwrites existing files with the zip's contents</param>
-        /// <returns></returns>
-        public static ZipExtractResult ExtractZip(Stream zipStream, string extractDirectory, bool overwriteTarget = true, string sourcePath = null)
-        {
-            if (zipStream == null)
-                throw new ArgumentNullException(nameof(zipStream));
-            if (string.IsNullOrEmpty(extractDirectory))
-                throw new ArgumentNullException(nameof(extractDirectory));
-
-            ZipExtractResult result = new ZipExtractResult
-            {
-                SourceZip = sourcePath ?? "Stream",
-                ResultStatus = ZipExtractResultStatus.Unknown
-            };
-
-            string createdDirectory = null;
-            List<string> createdFiles = new List<string>();
-            try
-            {
-                //Logger.log?.Info($"ExtractDirectory is {extractDirectory}");
-                using (ZipArchive zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
-                {
-                    //Logger.log?.Info("Zip opened");
-                    //extractDirectory = GetValidPath(extractDirectory, zipArchive.Entries.Select(e => e.Name).ToArray(), shortDirName, overwriteTarget);
-                    int longestEntryName = zipArchive.Entries.Select(e => e.Name).Max(n => n.Length);
-                    try
-                    {
-                        extractDirectory = Path.GetFullPath(extractDirectory); // Could theoretically throw an exception: Argument/ArgumentNull/Security/NotSupported/PathTooLong
-                    }
-                    catch (PathTooLongException ex)
-                    {
-                        result.Exception = ex;
-                        result.ResultStatus = ZipExtractResultStatus.DestinationFailed;
-                        return result;
-                    }
-                    result.OutputDirectory = extractDirectory;
-                    bool extractDirectoryExists = Directory.Exists(extractDirectory);
-                    string toBeCreated = extractDirectoryExists ? null : extractDirectory; // For cleanup
-                    try { Directory.CreateDirectory(extractDirectory); }
-                    catch (Exception ex)
-                    {
-                        result.Exception = ex;
-                        result.ResultStatus = ZipExtractResultStatus.DestinationFailed;
-                        return result;
-                    }
-
-                    result.CreatedOutputDirectory = !extractDirectoryExists;
-                    createdDirectory = string.IsNullOrEmpty(toBeCreated) ? null : extractDirectory;
-                    // TODO: Ordering so largest files extracted first. If the extraction is interrupted, theoretically the song's hash won't match Beat Saver's.
-                    foreach (ZipArchiveEntry entry in zipArchive.Entries.OrderByDescending(e => e.Length))
-                    {
-                        //if (!entry.FullName.Equals(entry.Name)) // If false, the entry is a directory or file nested in one
-                        //    continue;
-                        if (entry.Length == 0)
-                        {
-                            continue; // Directory
-                        }
-                        string entryPath = Path.Combine(extractDirectory, entry.FullName);
-                        Directory.CreateDirectory(Path.GetDirectoryName(entryPath));
-                        bool fileExists = File.Exists(entryPath);
-                        if (overwriteTarget || !fileExists)
-                        {
-                            try
-                            {
-                                entry.ExtractToFile(entryPath, overwriteTarget);
-                                createdFiles.Add(entryPath);
-                            }
-                            catch (InvalidDataException ex) // Entry is missing, corrupt, or compression method isn't supported
-                            {
-                                result.Exception = ex;
-                                result.ResultStatus = ZipExtractResultStatus.SourceFailed;
-                                result.ExtractedFiles = createdFiles.ToArray();
-                            }
-                            catch (Exception ex)
-                            {
-                                result.Exception = ex;
-                                result.ResultStatus = ZipExtractResultStatus.DestinationFailed;
-                                result.ExtractedFiles = createdFiles.ToArray();
-
-                            }
-                            if (result.Exception != null)
-                            {
-                                foreach (string file in createdFiles)
-                                {
-                                    TryDelete(file);
-                                }
-                                return result;
-                            }
-                        }
-                    }
-                    result.ExtractedFiles = createdFiles.ToArray();
-                }
-                result.ResultStatus = ZipExtractResultStatus.Success;
-                return result;
-#pragma warning disable CA1031 // Do not catch general exception types
-            }
-            catch (InvalidDataException ex) // FileStream is not in the zip archive format.
-            {
-                result.ResultStatus = ZipExtractResultStatus.SourceFailed;
-                result.Exception = ex;
-                return result;
-            }
-            catch (Exception ex) // If exception is thrown here, it probably happened when the FileStream was opened.
-#pragma warning restore CA1031 // Do not catch general exception types
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(createdDirectory))
-                    {
-                        Directory.Delete(createdDirectory, true);
-                    }
-                    else // TODO: What is this doing here...
-                    {
-                        foreach (string file in createdFiles)
-                        {
-                            File.Delete(file);
-                        }
-                    }
-                }
-                catch (Exception cleanUpException)
-                {
-                    // Failed at cleanup
-                }
-
-                result.Exception = ex;
-                result.ResultStatus = ZipExtractResultStatus.SourceFailed;
-                return result;
-            }
-        }
-
-        public static bool TryDelete(string filePath)
-        {
-
-            try
-            {
-                File.Delete(filePath);
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-    }
-    public class ZipExtractResult
-    {
-        public string SourceZip { get; set; }
-        public string OutputDirectory { get; set; }
-        public bool CreatedOutputDirectory { get; set; }
-        public string[] ExtractedFiles { get; set; }
-        public ZipExtractResultStatus ResultStatus { get; set; }
-        public Exception Exception { get; set; }
-    }
-
-    public enum ZipExtractResultStatus
-    {
-        /// <summary>
-        /// Extraction hasn't been attempted.
-        /// </summary>
-        Unknown = 0,
-        /// <summary>
-        /// Extraction was successful.
-        /// </summary>
-        Success = 1,
-        /// <summary>
-        /// Problem with the zip source.
-        /// </summary>
-        SourceFailed = 2,
-        /// <summary>
-        /// Problem with the destination target.
-        /// </summary>
-        DestinationFailed = 3
     }
 }

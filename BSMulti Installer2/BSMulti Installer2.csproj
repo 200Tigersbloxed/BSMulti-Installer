@@ -38,9 +38,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
@@ -76,6 +73,7 @@
     <Compile Include="Utilities\HttpClientDownloadWithProgress.cs" />
     <Compile Include="Utilities\Installer.cs" />
     <Compile Include="Utilities\Paths.cs" />
+    <Compile Include="Utilities\SimpleJSON.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="Utilities\VersionCheck.cs" />
     <Compile Include="Utilities\WebUtils.cs" />

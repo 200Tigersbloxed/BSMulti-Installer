@@ -160,7 +160,6 @@ namespace BSMulti_Installer2.Utilities
             double? progressPercentage = null;
             if (totalDownloadSize.HasValue)
                 progressPercentage = Math.Round((double)totalBytesRead / (double)totalDownloadSize.Value, 4);
-
             ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
         }
 

@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Management;
 using System.Net;
-using Newtonsoft.Json;
 using BSMulti_Installer2.Utilities;
 using static BSMulti_Installer2.Utilities.WebUtils;
 using System.Reflection;
@@ -96,8 +95,6 @@ namespace BSMulti_Installer2
 
 
             checkForMessage();
-
-            Directory.CreateDirectory("Files");
         }
 
         private void pnlTitleBar_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -263,9 +260,9 @@ namespace BSMulti_Installer2
                 MessageBox.Show("Please run the installer as administrator to continue! (Beat Saber Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
-            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Files"))
+            if (Directory.Exists(Paths.Path_Temp))
             {
-                if (verifyPermissions(AppDomain.CurrentDomain.BaseDirectory + @"\Files")) { }
+                if (verifyPermissions(Paths.Path_Temp)) { }
                 else
                 {
                     MessageBox.Show("Please run the installer as administrator to continue! (Installer Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -274,8 +271,8 @@ namespace BSMulti_Installer2
             }
             else
             {
-                Directory.CreateDirectory("Files");
-                if (verifyPermissions(AppDomain.CurrentDomain.BaseDirectory + @"\Files")) { }
+                Directory.CreateDirectory(Paths.Path_Temp);
+                if (verifyPermissions(Paths.Path_Temp)) { }
                 else
                 {
                     MessageBox.Show("Please run the installer as administrator to continue! (Installer Folder Denied)", "Access Denied to Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -286,17 +283,15 @@ namespace BSMulti_Installer2
 
         void findMultiplayerVersion()
         {
-            string mj;
-            string mlj;
+            string mj = bsl + @"/UserData/BeatSaberMultiplayer.json";
             // check for the json data
-            if (File.Exists(bsl + @"/UserData/BeatSaberMultiplayer.json"))
+            if (File.Exists(mj))
             {
-                mj = bsl + @"/UserData/BeatSaberMultiplayer.json";
                 if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayer.dll"))
                 {
                     // multiplayer is installed
                     string json = System.IO.File.ReadAllText(mj);
-                    dynamic bsmj = JsonConvert.DeserializeObject(json);
+                    var bsmj = JSON.Parse(json).AsObject;
                     label8.Text = "Multiplayer Version: " + bsmj["_modVersion"];
                 }
                 else
@@ -310,16 +305,16 @@ namespace BSMulti_Installer2
                 // no multiplayer
                 label8.Text = "Multiplayer Version: Not Installed";
             }
-
-            if (File.Exists(bsl + @"/UserData/BeatSaberMultiplayer.json"))
+            string mlj = bsl + @"/UserData/Beat Saber Multiplayer Lite.json";
+            if (File.Exists(mlj))
             {
-                mlj = bsl + @"/UserData/BeatSaberMultiplayerLite.json";
                 if (File.Exists(bsl + @"/Plugins/BeatSaberMultiplayerLite.dll"))
                 {
                     // multiplayer is installed
                     string json = System.IO.File.ReadAllText(mlj);
-                    dynamic bsmj = JsonConvert.DeserializeObject(json);
-                    label9.Text = "MultiplayerLite Version: " + bsmj["_modVersion"];
+                    JSONObject bsmj = JSON.Parse(json).AsObject;
+                    
+                    label9.Text = "MultiplayerLite Version: " + bsmj["MultiplayerSettings"]?["ModVersion"];
                 }
                 else
                 {
