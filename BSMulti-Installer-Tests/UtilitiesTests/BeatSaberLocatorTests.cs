@@ -26,6 +26,7 @@ namespace BSMulti_Installer_Tests.UtilitiesTests
                 string version = BeatSaberTools.GetVersion(gameDir);
                 Console.WriteLine($"Game version from '{gameDir}':");
                 Console.WriteLine(version);
+                Assert.IsFalse(version == null || version.Length == 0);
             }
         }
     }

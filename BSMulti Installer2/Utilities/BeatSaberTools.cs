@@ -137,7 +137,7 @@ namespace BSMulti_Installer2.Utilities
                 byte[] file = File.ReadAllBytes(filename);
                 string str = Encoding.Default.GetString(file);
                 string versionLocation = "public.app-category.games";
-                int startIndex = str.IndexOf(versionLocation) + 136;
+                int startIndex = str.IndexOfAny(Numbers, str.IndexOf(versionLocation));
                 int length = str.IndexOfAny(IllegalCharacters, startIndex) - startIndex;
                 string version = str.Substring(startIndex, length);
 
@@ -149,6 +149,8 @@ namespace BSMulti_Installer2.Utilities
                 return null;
             }
         }
+
+        public static char[] Numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
         public static string GetVersion(string gameDir) => GetVersion(gameDir, out _);
 
