@@ -1,5 +1,7 @@
 # IMPORTANT
 
+Due to a recent Attack to the main server, this installer won't work anymore. The website was breached, and I had to delete it. Don't worry, they got no info, cause I don't log any info on there (lolw they hacked it for nothing) but yeah.
+
 All BSMulti-Installer services will be disbanded on 12/1/2020 in place for the official multiplayer. After 12/1/2020, this installer will no longer work properly. **THIS DOES NOT MEAN THE MULTIPLAYER/LITE MOD WILL NOT WORK**, you just won't be able to use this installer anymore.
 
 This Repo will no longer recieve updates. All bugs will be marked with `wont fix` and any PRs will not be pulled. Making a Fork would be a better option.
@@ -11,8 +13,6 @@ For modded multiplayer on PC on v1.12+, check out
 [MultiplayerExtensions](https://github.com/Zingabopp/MultiplayerExtensions)
 
 [ServerBrowser](https://github.com/roydejong/BeatSaberServerBrowser)
-
-This Repo will be marked as archieved on 12/1/2020 and the Network Services will be disbanded on 12/1/2020
 
 # BSMulti-Installer
 Install and Uninstall Beat Saber Multiplayer Easily
