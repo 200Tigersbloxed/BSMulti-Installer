@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns="http://www.w3.org/BSMultiInstaller"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.w3.org/BSMultiInstaller">
+
+
+  <xs:complexType name="MoveTo">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">The downloaded file should be moved to this directory.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Destination" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Destination full path, relative to the root directory.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="ExtractTo">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Describes how the downloaded file should be extracted.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0">
+      <xs:element name="File" type="ComponentFile" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Directory" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Optional: Destination directory, defined file extractions will be relative to this.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="ComponentInstallation">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Defines how to install a component. Not needed for zips to be extracted to the root folder.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="MoveTo" type="MoveTo" maxOccurs="1" minOccurs="1" />
+        <xs:element name="ExtractTo" type="ExtractTo" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">This downloaded file is a zip archive and should be extracted to this location. Leave blank to use the root location.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="Files" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">List of files installed by the component, used for validating the install.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="File" type="ComponentFile" minOccurs="1" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MultiplayerComponent">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Identifies a component and includes a URL to the download.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Installation" type="ComponentInstallation" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Requires" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">List of components this component depends on.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Requirement" type="ComponentReference" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Metadata" type="ComponentMetadata" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+    <xs:attribute name="Name" type="xs:string" use="required" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Name of the component.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Version" type="xs:string" use="required" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Version of the component.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="URL" type="xs:string" use="required" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">URL used to download the component.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="ComponentFile">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">A file of a component with optional hash.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Path" type="xs:string" use="required" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Path to the file, relative to the root directory.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ZipPath" type="xs:string" use="optional" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Path to the file in the zip archive.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SHA1" type="xs:string" use="optional" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">SHA1 Hash of the file.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="RequireHashMatch" type="xs:boolean" use="optional" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Require the SHA1 hash match for installion to be considered successful.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="ComponentMetadata">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">References a component in ComponentDefinitions.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Description of the component.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Notes about the component.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Link" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Link to the component's repository.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="ComponentReference">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">References a component in ComponentDefinitions.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Name of the component.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Version" type="xs:string" use="required" >
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Version of the component.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="MultiplayerMod">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Defines a multiplayer mod and references its dependencies and optional components.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Installation" minOccurs="0" maxOccurs="1" type="ComponentInstallation" />
+      <xs:element name="Dependencies" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">List of components required for the multiplayer mod.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Component" type="ComponentReference" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="OptionalComponents" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">List of optional components the multiplayer mod can use.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Component" type="ComponentReference" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Metadata" type="ComponentMetadata" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Name of the multiplayer mod.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Version" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Version of the multiplayer mod.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="URL" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">URL to download the mod from.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MinGameVersion" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Minimum Beat Saber game version this mod supports.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MaxGameVersion" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">Maximum Beat Saber game version this mod supports.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:element name="MultiplayerInstallerConfiguration">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="ModGroup">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">List of available multiplayer mods.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence minOccurs="0">
+              <xs:element name="MultiplayerMod" maxOccurs="unbounded" type="MultiplayerMod" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ComponentDefinitions">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">List of components available for installation.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+              <xs:element name="Component" type="MultiplayerComponent" minOccurs="1" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

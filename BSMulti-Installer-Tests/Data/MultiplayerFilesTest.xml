@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MultiplayerInstallerConfiguration xmlns="http://www.w3.org/BSMultiInstaller"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.w3.org/BSMultiInstaller https://raw.githubusercontent.com/Zingabopp/BSMulti-Installer/refactor/MultiplayerFiles.xsd">
+
+  <ModGroup>
+    <MultiplayerMod Name="Multiplayer" Version="0.7.2.3" MinGameVersion="1.8.0" MaxGameVersion="1.11.1"
+                    URL="https://ci.appveyor.com/api/buildjobs/bsououhl2ux5uhbr/artifacts/Output%2FBeatSaberMultiplayer.zip">
+      <Metadata>
+        <Description>The original multiplayer mod, created by Andruzzzhka.</Description>
+        <Notes>Supports avatars.</Notes>
+        <Link>https://github.com/andruzzzhka/BeatSaberMultiplayer</Link>
+      </Metadata>
+      <Dependencies>
+        <Component Name="Modded_CustomAvatars" Version="5.0.0-beta.7" />
+        <Component Name="CustomAvatars" Version="5.0.0-beta.7" />
+        <Component Name="DynamicOpenVR" Version="0.3.0" />
+        <Component Name="DiscordCore" Version="1.0.1" />
+        <Component Name="CommonDependencies" Version="1.0.0" />
+      </Dependencies>
+    </MultiplayerMod>
+
+    <MultiplayerMod Name="MultiplayerLite" Version="7.2.7" MinGameVersion="1.8.0" MaxGameVersion="1.11.1"
+                    URL="https://github.com/Zingabopp/BeatSaberMultiplayer/releases/download/7.2.7/BeatSaberMultiplayerLite-7.2.7-bs1.11.0-3952428.zip">
+      <Metadata>
+        <Description>Zingabopp's fork of the original multiplayer mod by Andruzzzhka. A lighter version with fewer dependencies.</Description>
+        <Notes>Does not support avatars, but other players can be seen in the room with floating text.</Notes>
+        <Link>https://github.com/Zingabopp/BeatSaberMultiplayer</Link>
+      </Metadata>
+      <Dependencies>
+        <Component Name="CommonDependencies" Version="1.0.0" />
+      </Dependencies>
+      <OptionalComponents>
+        <Component Name="DiscordCore" Version="1.0.1" />
+        <Component Name="BeatSaberPlaylistsLib" Version="1.0.2" />
+      </OptionalComponents>
+    </MultiplayerMod>
+  </ModGroup>
+
+  <ComponentDefinitions>
+    <Component Name="Modded_CustomAvatars" Version="5.0.0-beta.7" URL="https://tigersserver.xyz/cadll">
+      <Metadata>
+        <Description>A modified version of CustomAvatars to support Multiplayer.</Description>
+      </Metadata>
+      <Installation>
+        <MoveTo Destination="Plugins\CustomAvatar.dll" />
+        <Files>
+          <File Path="Plugins\CustomAvatar.dll" SHA1="D33F47AD70835F3E2748BE657EC03928B4D2B8Cf" RequireHashMatch="true" />
+        </Files>
+      </Installation>
+      <Requires>
+        <Requirement Name="CustomAvatars" Version="5.0.0-beta.7"/>
+      </Requires>
+    </Component>
+    <Component Name="CustomAvatars" Version="5.0.0-beta.7" URL="https://tigersserver.xyz/customavatars">
+      <Requires>
+        <Requirement Name="DynamicOpenVR" Version="0.3.0"/>
+        <Requirement Name="CommonDependencies" Version="1.0.0"/>
+      </Requires>
+    </Component>
+    <Component Name="DynamicOpenVR" Version="0.3.0" URL="https://tigersserver.xyz/dynamicopenvr" />
+    <Component Name="DiscordCore" Version="1.0.1" URL="https://tigersserver.xyz/discordcore">
+      <Installation>
+        <Files>
+          <File Path="Libs\Native\discord_game_sdk.dll" />
+          <File Path="Plugins\DiscordCore.dll" />
+        </Files>
+      </Installation>
+    </Component>
+    <Component Name="CommonDependencies" Version="1.0.0" URL="https://tigersserver.xyz/dep" >
+      <Installation>
+        <ExtractTo>
+          <File ZipPath="dep\Plugins\SongCore.dll" Path="Plugins\SongCore.dll" />
+          <File ZipPath="dep\Plugins\BSML.dll" Path="Plugins\BSML.dll" />
+          <File ZipPath="dep\Plugins\ScoreSaber.dll" Path="Plugins\ScoreSaber.dll" />
+          <File ZipPath="dep\Plugins\BS_Utils.dll" Path="Plugins\BS_Utils.dll" />
+        </ExtractTo>
+      </Installation>
+    </Component>
+    <Component Name="BeatSaberPlaylistsLib" Version="1.0.2" URL="https://github.com/Zingabopp/BeatSaberPlaylistsLib/releases/download/1.0.2/BeatSaberPlaylistsLib-1.0.2-bs1.11.0-0201474.zip" />
+  </ComponentDefinitions>
+
+</MultiplayerInstallerConfiguration>

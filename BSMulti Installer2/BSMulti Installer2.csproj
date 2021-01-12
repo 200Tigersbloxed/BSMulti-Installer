@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>BSMulti_Installer2</RootNamespace>
     <AssemblyName>BSMulti Installer2</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,9 +38,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
@@ -57,25 +55,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="GameInstallSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="GameInstallSelector.Designer.cs">
+      <DependentUpon>GameInstallSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form2.cs">
+    <Compile Include="InstallerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="InstallerWindow.Designer.cs">
+      <DependentUpon>InstallerWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="MultiplayerComponent.cs" />
+    <Compile Include="Utilities\BeatSaberInstall.cs" />
+    <Compile Include="Utilities\BeatSaberTools.cs" />
+    <Compile Include="Utilities\HttpClientDownloadWithProgress.cs" />
+    <Compile Include="Utilities\Installer.cs" />
+    <Compile Include="Utilities\Paths.cs" />
+    <Compile Include="Utilities\SimpleJSON.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
+    <Compile Include="Utilities\VersionCheck.cs" />
+    <Compile Include="Utilities\WebUtils.cs" />
+    <Compile Include="XML\Extensions.cs" />
+    <Compile Include="XML\IComponentInstaller.cs" />
+    <Compile Include="XML\MultiplayerFiles.Additions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="XML\MultiplayerFiles.cs">
+      <DependentUpon>MultiplayerFiles.Additions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="XML\MultiplayerInstallerSerializationException.cs" />
+    <Compile Include="XML\Validator.cs" />
+    <EmbeddedResource Include="GameInstallSelector.resx">
+      <DependentUpon>GameInstallSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="InstallerWindow.resx">
+      <DependentUpon>InstallerWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -87,7 +103,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -111,4 +126,7 @@
     <Content Include="bsmilogo_mVX_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(SolutionDir)MultiplayerFiles.xml" "$(ProjectDir)$(OutDir)MultiplayerFiles.xml"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
